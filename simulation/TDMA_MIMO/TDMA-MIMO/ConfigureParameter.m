@@ -7,7 +7,7 @@ function [cfgOut] = ConfigureParameter()
     cfgOut.Frame = 1; % 总帧数
     cfgOut.applyVmaxExtend = 1; % 允许速度扩展
     if cfgOut.applyVmaxExtend
-        cfgOut.min_dis_apply_vmax_extend = 10; % 允许速度扩展的最小距离
+        cfgOut.min_dis_apply_vmax_extend = 20; % 允许速度扩展的最小距离
     end
     
     if cfgOut.Mode == 1 

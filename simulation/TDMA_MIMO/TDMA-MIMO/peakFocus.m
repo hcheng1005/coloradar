@@ -14,9 +14,9 @@ function [rd_peak_list, rd_peak] = peakFocus(RDM, cfar_out_list)
                    RDM(range_idx, doppler_idx) > RDM(range_idx,doppler_idx-1) && ...
                    RDM(range_idx, doppler_idx) > RDM(range_idx,doppler_idx+1) 
                
-               rd_peak(range_idx, doppler_idx) = RDM(range_idx,doppler_idx);
+               rd_peak(range_idx, doppler_idx) = RDM(range_idx,doppler_idx); % 保存RDMap的原始数值
                rdlist = [range_idx; doppler_idx];
-               rd_peak_list = [rd_peak_list rdlist];         
+               rd_peak_list = [rd_peak_list rdlist];  % 保存距离和速度索引
            end
        end
     end

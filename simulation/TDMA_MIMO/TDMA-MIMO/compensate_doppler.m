@@ -87,38 +87,7 @@ function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, 
         sig_bin_noapply = doaInput .* (reshape(exp(-1j * delta_phi_noapply * tmpTX), size(delta_phi_noapply, 1), 1, size(tmpTX,2))); % 单一相位约束
         correct_sig(index_noapply, :, :) = sig_bin_noapply(index_noapply, :, :);
         
-        com_dopplerFFTOut = correct_sig;
-        
-%         % 下面这部分暂时没有用到 先不做考虑 后面有时间再维护
-%         % 角度维FFT信噪比求解
-%         noredundant_arr = cfgOut.virtual_array.noredundant_aziarr; % 获取方位维度天线
-%         noredundant_rows0 = [];
-%         noredundant_rows1 = [];
-%         rx_pos_set = noredundant_arr(:,3); % 接收天线位置集合
-%         tx_pos_set = noredundant_arr(:,4); % 发射天线位置集合
-%         for rx_id = 1 :length(virtual_array.noredundant_arr(rx_pos_set))
-%             rx_arr = rx_pos_set(rx_id);
-%             noredundant_rows0 = [noredundant_rows0, find(cfgOut.PosRX_BOARD_ID == rx_arr)]; % 确定接收天线的序号
-%         end
-%         for tx_id = 1 :length(virtual_array.noredundant_arr(tx_pos_set))
-%             tx_arr = tx_pos_set(tx_id);
-%             noredundant_rows1 = [noredundant_rows1, find(cfgOut.PosTX_Trans_ID == tx_arr)]; % 确定发射天线的顺序序号 不是板子上排列
-%         end
-%         noredundant_rows = [noredundant_rows0;noredundant_rows1]; 
-%         
-%         sig_bin_row1 = zeros(tarNum, max(virtual_array.azi_arr)+1, max(virtual_array.ele_arr)+1, numTx); 
-%                 
-%         for trx_id = 1 : size(noredundant_rows1,1) % 86个阵列
-%             sig_bin_row1(:, noredundant_rows(1,trx_id), noredundant_rows(2,trx_id), :) = sig_bin(:, noredundant_rows(1,trx_id), noredundant_rows(2,trx_id), :); % 重排后的信号空间 1*12
-%         end
-%         sig_bin_row1 = squeeze(sig_bin_row1(:,:,1,:)); % tarNum * 86 * txNum
-%         sig_bin_row1_fft = fftshift(fft(sig_bin_row1, angleFFT_size, 2), 2); % 方位维FFT
-%         
-%         angle_bin_skip_left = 4;
-%         angle_bin_skip_right = 4;
-%         sig_bin_row1_fft_cut = abs(sig_bin_row1_fft(:, angle_bin_skip_left + 1 : angleFFT_size - angle_bin_skip_right, :));
-%         [max_val, max_idx] = max(max(abs(sig_bin_row1_fft_cut), [], 2), [], 3);
-        
+        com_dopplerFFTOut = correct_sig;        
     else
         sig_bin_org = doaInput; % TARNUM * RXNUM * TXNUM
         deltaPhi = 2 * pi * (dopplerIdx - ChirpNum / 2) / (numTx * ChirpNum); % 多普勒相位修正 tarNum * 1

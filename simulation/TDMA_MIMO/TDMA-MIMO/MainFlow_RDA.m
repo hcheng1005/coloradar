@@ -162,6 +162,7 @@ for frame_id = 1 : Frame % Frame
     
     cfgDOA.AziMethod = 'FFT'; % 方位维度DOA估计方法
     cfgDOA.EleMethod = 'MUSIC'; % 俯仰维度DOA估计方法
+    % cfgDOA.EleMethod = 'FFT'; % 俯仰维度DOA估计方法
     
     cfgDOA.thetaGrids = linspace(-90, 90, cfgDOA.FFTNum); % 空间网格
     cfgDOA.AzisigNum = 1; % 约束每个RD-CELL上的信源数目
@@ -195,11 +196,19 @@ for frame_id = 1 : Frame % Frame
             snrVal = mag2db(snrOut(rd_peak_list(1, peak_idx), rd_peak_list(2, peak_idx))); % 信噪比的提升是由于chirpNum*ADCNum的积累
             tarData = squeeze(com_dopplerFFTOut(peak_idx, :,:));
 
-    %         aziarr = unique(arr(1,arr(2,:)==0)); % 初阶版本获取方位维度天线排列
-    %         aziArrData = arrData(aziarr+1); % 获取方位维度信号
-
             % 方位角解析
            sig = tarData;
+
+           %% ------------------------------------------------------------------------------------------
+           % 这里初始化信号子空间的意思就是根据阵列天线设计，重新排列数据
+           % 已AWR1243为例，3*4的物理天线一共会有12根虚拟天线，其阵列如下：(第一个数字代表Tx，第二个数字代表Rx)
+           % xx xx 31 32 33 34 xx xx 
+           % 11 12 13 14 21 22 23 24
+           % 所以，实际的信号空间为2*8数列，下面代码的操作就是把对应天线的数值放在对应的位置上
+           % 然后分别对2个横向数列（8个数值）做DOA，根据其中一个计算峰值得到方位角信息（另一列是后面做俯仰角计算用）
+           % 然后对方位角索引对应的纵向数值（2个经过DOA后的数值），再次做DOA，得到俯仰角
+           %% ------------------------------------------------------------------------------------------
+           
            sig_space = zeros(max(virtual_array.azi_arr)+1,max(virtual_array.ele_arr)+1); % 初始化信号子空间
            for trx_id = 1 : size(cfgOut.sigIdx,2)
                sig_space(cfgOut.sigSpaceIdx(1, trx_id), cfgOut.sigSpaceIdx(2,trx_id)) = sig(cfgOut.sigIdx(1,trx_id), cfgOut.sigIdx(2,trx_id)); % 重排后的信号空间
@@ -225,6 +234,7 @@ for frame_id = 1 : Frame % Frame
                 targetPerFrame.snrSet = [targetPerFrame.snrSet, snrVal];
                 targetPerFrame.azimuthSet = [targetPerFrame.azimuthSet,aziVal];
                 targetPerFrame.elevationSet = [targetPerFrame.elevationSet,eleVal];
+                targetPerFrame
             end
         end
         toc
