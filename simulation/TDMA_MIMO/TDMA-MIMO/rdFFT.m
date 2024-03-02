@@ -1,5 +1,5 @@
 function fftOut = rdFFT(adcData, IQFlag)
-    %% ±¾ÎÄ¼şÓÃÓÚÊµÏÖ¾àÀëÎ¬¡¢¶àÆÕÀÕÎ¬FFT
+    %% æœ¬æ–‡ä»¶ç”¨äºå®ç°è·ç¦»ç»´ã€å¤šæ™®å‹’ç»´FFT
     %% By Xuliang,20230412
     
     ADCNum = size(adcData, 1);
@@ -8,33 +8,33 @@ function fftOut = rdFFT(adcData, IQFlag)
     fftOut = {};
     
     if IQFlag
-        % ¾àÀëÎ¬FFT
-        rangeWin = hanning(ADCNum); % ¾àÀë¼Ó´°
-        rangeWin3D = repmat(rangeWin, 1, ChirpNum, arrNum); % À©³äÓërangeDataÊı¾İÒ»ÖÂ
-        rangeData = adcData .* rangeWin3D ; % ¾àÀëÎ¬¼Ó´°
-        rangeFFTOut = fft(rangeData, [], 1) * 2 * 2 / ADCNum; % ¶Ô¾àÀëÎ¬×öFFT¡¾FFT²¹³¥+ººÄş´°²¹³¥¡¿
+        % è·ç¦»ç»´FFT
+        rangeWin = hanning(ADCNum); % è·ç¦»åŠ çª—
+        rangeWin3D = repmat(rangeWin, 1, ChirpNum, arrNum); % æ‰©å……ä¸rangeDataæ•°æ®ä¸€è‡´
+        rangeData = adcData .* rangeWin3D ; % è·ç¦»ç»´åŠ çª—
+        rangeFFTOut = fft(rangeData, [], 1) * 2 * 2 / ADCNum; % å¯¹è·ç¦»ç»´åšFFTã€FFTè¡¥å¿+æ±‰å®çª—è¡¥å¿ã€‘
         
-        % ¶àÆÕÀÕÎ¬FFT 
-        dopplerWin = hanning(ChirpNum)'; % ººÄş´°
-        dopplerWin3D = repmat(dopplerWin, ADCNum, 1, arrNum); % À©³äÓëdopplerDataÊı¾İÒ»ÖÂ
-        dopplerData = rangeFFTOut .* dopplerWin3D; % ¶àÆÕÀÕ¼Ó´°
-        dopplerFFTOut = fftshift(fft(dopplerData, [], 2),2) * 2 * 2 / ChirpNum; % ¶Ô¶àÆÕÀÕÎ¬×öFFT¡¾FFT²¹³¥+ººÄş´°²¹³¥¡¿ 
+        % å¤šæ™®å‹’ç»´FFT 
+        dopplerWin = hanning(ChirpNum)'; % æ±‰å®çª—
+        dopplerWin3D = repmat(dopplerWin, ADCNum, 1, arrNum); % æ‰©å……ä¸dopplerDataæ•°æ®ä¸€è‡´
+        dopplerData = rangeFFTOut .* dopplerWin3D; % å¤šæ™®å‹’åŠ çª—
+        dopplerFFTOut = fftshift(fft(dopplerData, [], 2),2) * 2 * 2 / ChirpNum; % å¯¹å¤šæ™®å‹’ç»´åšFFTã€FFTè¡¥å¿+æ±‰å®çª—è¡¥å¿ã€‘ 
     else
-        % ²ÉÑùIÂ·Ê±ĞèÒª×¢ÒâÄ¿±ê¾àÀë²»ÄÜ³¬³ö×î´óÔ¼ÊøÄ¿±ê¾àÀë ·ñÔò»á³öÏÖ¾àÀëÄ£ºı
-        % µ¥Â·ĞÅºÅĞèÒªÅ×µôÒ»°ëĞÅºÅ
+        % é‡‡æ ·Iè·¯æ—¶éœ€è¦æ³¨æ„ç›®æ ‡è·ç¦»ä¸èƒ½è¶…å‡ºæœ€å¤§çº¦æŸç›®æ ‡è·ç¦» å¦åˆ™ä¼šå‡ºç°è·ç¦»æ¨¡ç³Š
+        % å•è·¯ä¿¡å·éœ€è¦æŠ›æ‰ä¸€åŠä¿¡å·
 
-        % ¾àÀëÎ¬FFT
-        rangeWin = hanning(ADCNum); % ººÄş´°
-        rangeWin3D = repmat(rangeWin, 1, ChirpNum, arrNum); % À©³äÓërangeDataÊı¾İÒ»ÖÂ
-        rangeData = adcData .* rangeWin3D ; % ¾àÀëÎ¬¼Ó´°
-        rangeFFTOut = fft(rangeData, [], 1) * 2 * 2 / ADCNum; % ¶Ô¾àÀëÎ¬×öFFT¡¾FFT²¹³¥+ººÄş´°²¹³¥¡¿
+        % è·ç¦»ç»´FFT
+        rangeWin = hanning(ADCNum); % æ±‰å®çª—
+        rangeWin3D = repmat(rangeWin, 1, ChirpNum, arrNum); % æ‰©å……ä¸rangeDataæ•°æ®ä¸€è‡´
+        rangeData = adcData .* rangeWin3D ; % è·ç¦»ç»´åŠ çª—
+        rangeFFTOut = fft(rangeData, [], 1) * 2 * 2 / ADCNum; % å¯¹è·ç¦»ç»´åšFFTã€FFTè¡¥å¿+æ±‰å®çª—è¡¥å¿ã€‘
         rangeFFTOut = rangeFFTOut(1:end/2, :, :);
         
-        % ¶àÆÕÀÕÎ¬FFT 
-        dopplerWin = hanning(ChirpNum)'; % ººÄş´°
-        dopplerWin3D = repmat(dopplerWin, ADCNum / 2, 1, arrNum); % À©³äÓëdopplerDataÊı¾İÒ»ÖÂ
-        dopplerData = rangeFFTOut .* dopplerWin3D; % ¶àÆÕÀÕ¼Ó´°
-        dopplerFFTOut = fftshift(fft(dopplerData, [], 2),2) * 2 * 2 / ChirpNum; % ¶Ô¶àÆÕÀÕÎ¬×öFFT¡¾FFT²¹³¥+ººÄş´°²¹³¥¡¿
+        % å¤šæ™®å‹’ç»´FFT 
+        dopplerWin = hanning(ChirpNum)'; % æ±‰å®çª—
+        dopplerWin3D = repmat(dopplerWin, ADCNum / 2, 1, arrNum); % æ‰©å……ä¸dopplerDataæ•°æ®ä¸€è‡´
+        dopplerData = rangeFFTOut .* dopplerWin3D; % å¤šæ™®å‹’åŠ çª—
+        dopplerFFTOut = fftshift(fft(dopplerData, [], 2),2) * 2 * 2 / ChirpNum; % å¯¹å¤šæ™®å‹’ç»´åšFFTã€FFTè¡¥å¿+æ±‰å®çª—è¡¥å¿ã€‘
 
     end
     fftOut.rangeFFT = rangeFFTOut;

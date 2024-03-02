@@ -1,10 +1,10 @@
 function [adcData] = GenerateAdcData(tarOut, cfgOut, IQFlag, saveFlag, dataPath)
-    %% IQFlag: Éú³ÉĞÅºÅÄ£Ê½±ê¼Ç
-    %% saveFlag: ½«Éú³ÉÊı¾İ½øĞĞ±£´æ
-    %% ±¾ÎÄ¼şÓÃÓÚË«Â·ADC-IQĞÅºÅ
+    %% IQFlag: ç”Ÿæˆä¿¡å·æ¨¡å¼æ ‡è®°
+    %% saveFlag: å°†ç”Ÿæˆæ•°æ®è¿›è¡Œä¿å­˜
+    %% æœ¬æ–‡ä»¶ç”¨äºåŒè·¯ADC-IQä¿¡å·
     %% By Xuliang, 20230411
     
-    % ADCÊı¾İÉú³É
+    % ADCæ•°æ®ç”Ÿæˆ
     if IQFlag
         tic
         adcData = GenerateSigIQ(tarOut, cfgOut);
@@ -14,7 +14,7 @@ function [adcData] = GenerateAdcData(tarOut, cfgOut, IQFlag, saveFlag, dataPath)
         [adcData] = GenerateSigI(tarOut, cfgOut);
         toc
     end
-    disp(strcat(['=====','ADCĞÅºÅÉú³ÉÍê±Ï','====='])); 
+    disp(strcat(['=====','ADCä¿¡å·ç”Ÿæˆå®Œæ¯•','====='])); 
     
     if saveFlag
         save(dataPath, 'adcData');

@@ -1,17 +1,17 @@
 function [tarSNR] = CalculateSNR(targetR, targetRCS, Gt, Gr, lambda, Pt, Fn, Ls, FsAdc)
-%% ±¾ÎÄ¼şÓÃÓÚ·ÂÕæÅäÖÃÄ¿±ê²ÎÊı
-%% By Xuliang, 20230411
-
-    Pt_dB = Pt - 30; % ·¢Éä¹¦ÂÊ dB
-    R = db(targetR) / 2; % ¾àÀë
-    lambda = db(lambda ^ 2) / 2; % ²¨³¤
-    const = db((4 * pi) ^ 3) / 2; % ³£ÊıÏî
+    %% æœ¬æ–‡ä»¶ç”¨äºä»¿çœŸé…ç½®ç›®æ ‡å‚æ•°
+    %% By Xuliang, 20230411
     
-    K = 1.380649e-23; % ²£¶û×ÈÂü³£Êı J/k 
-    B = FsAdc; % ²ÉÑù´ø¿í HZ
-    T0 = 290; % ¿ª¶ûÎÄÏµÊı
-    KBT = db(K * B * T0) / 2; 
-    
-    tarSNR = (Pt_dB + Gt + Gr + targetRCS + lambda) - (KBT + Fn + const + 4 * R + Ls);
-    
-end
+        Pt_dB = Pt - 30; % å‘å°„åŠŸç‡ dB
+        R = db(targetR) / 2; % è·ç¦»
+        lambda = db(lambda ^ 2) / 2; % æ³¢é•¿
+        const = db((4 * pi) ^ 3) / 2; % å¸¸æ•°é¡¹
+        
+        K = 1.380649e-23; % ç»å°”å…¹æ›¼å¸¸æ•° J/k 
+        B = FsAdc; % é‡‡æ ·å¸¦å®½ HZ
+        T0 = 290; % å¼€å°”æ–‡ç³»æ•°
+        KBT = db(K * B * T0) / 2; 
+        
+        tarSNR = (Pt_dB + Gt + Gr + targetRCS + lambda) - (KBT + Fn + const + 4 * R + Ls);
+        
+    end

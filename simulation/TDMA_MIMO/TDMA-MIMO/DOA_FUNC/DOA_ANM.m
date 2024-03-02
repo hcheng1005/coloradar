@@ -1,16 +1,16 @@
 % function [PoutANM,u_vec,T] = DOA_ANM(Y, P)
-%     % ±¾³ÌĞòÎªvanilla-Ô­×Ó·¶ÊıµÄº¯ÊıÊµÏÖÎÄ¼ş
-%     % Y £º»ù´øĞÅºÅ
-%     % A £º¹ıÍê±¸»ù
-%     % P £º ĞÅÔ´ÊıÄ¿
-%     f0 = 77e9; % ÆµÂÊ
-%     c = 3e8; % ¹âËÙ
-%     lambda = c / f0; % ²¨³¤
-%     d = lambda / 2; % ÕóÔª¼ä¾à
-%     [M, snap] = size(Y); % ÕóÔª ¿ìÅÄ
+%     % æœ¬ç¨‹åºä¸ºvanilla-åŸå­èŒƒæ•°çš„å‡½æ•°å®ç°æ–‡ä»¶
+%     % Y ï¼šåŸºå¸¦ä¿¡å·
+%     % A ï¼šè¿‡å®Œå¤‡åŸº
+%     % P ï¼š ä¿¡æºæ•°ç›®
+%     f0 = 77e9; % é¢‘ç‡
+%     c = 3e8; % å…‰é€Ÿ
+%     lambda = c / f0; % æ³¢é•¿
+%     d = lambda / 2; % é˜µå…ƒé—´è·
+%     [M, snap] = size(Y); % é˜µå…ƒ å¿«æ‹
 %     
-%     if snap == 1 % µ¥¿ìÅÄÄ£ĞÍ
-%         sigma = 1; % ÔëÉù²ÎÊı
+%     if snap == 1 % å•å¿«æ‹æ¨¡å‹
+%         sigma = 1; % å™ªå£°å‚æ•°
 %         regular_param = sqrt(M * log(M * sigma));
 %         cvx_begin sdp quiet
 %         cvx_solver sdpt3
@@ -23,7 +23,7 @@
 %         [Phi, Val] = rootmusic(T, P, 'corr');
 %         Phis = Phi / 2 / pi ;
 %         estimated_theta = asind(-Phis * lambda / d);
-%     else % ¶à¿ìÅÄÄ£ĞÍ
+%     else % å¤šå¿«æ‹æ¨¡å‹
 %         regular_param = sqrt(M * (snap + log(M) + sqrt(2 * snap * log(M))));
 %         cvx_begin sdp quiet
 %         cvx_solver sdpt3
@@ -34,15 +34,15 @@
 %             [X Y';Y T] >= 0;
 %         cvx_end
 %         
-%         [Phi, Val] = rootmusic(T, P, 'corr'); % ´ÓuÖĞ»Ö¸´³öÏàÎ»Öµ
+%         [Phi, Val] = rootmusic(T, P, 'corr'); % ä»uä¸­æ¢å¤å‡ºç›¸ä½å€¼
 %         Phis = Phi / 2 / pi ;
 %         estimated_theta = asind(-Phis * lambda / d);
 %     end
 %     PoutANM = estimated_theta.';
-%     u_vec = zeros(M, 1); % ¹¹½¨ÏÂ¶Ô½Ç
-%     for iid = 1 : M % Ê¹ÓÃiÈ¥¿ØÖÆÃ¿¸ö¶Ô½ÇÏß
+%     u_vec = zeros(M, 1); % æ„å»ºä¸‹å¯¹è§’
+%     for iid = 1 : M % ä½¿ç”¨iå»æ§åˆ¶æ¯ä¸ªå¯¹è§’çº¿
 %         for pid = iid : M
-%             u_vec(iid) = u_vec(iid) + T(pid , pid - iid + 1); % pid ¿ØÖÆÁĞ iid=3 pid=3:8 pid-iid+1=1:6 
+%             u_vec(iid) = u_vec(iid) + T(pid , pid - iid + 1); % pid æ§åˆ¶åˆ— iid=3 pid=3:8 pid-iid+1=1:6 
 %         end
 %         u_vec(iid) = u_vec(iid) / (M - iid + 1);
 %     end
@@ -50,18 +50,18 @@
 %    
 
 function PoutANM = DOA_ANM(Y, P)
-    % ±¾³ÌĞòÎªvanilla-Ô­×Ó·¶ÊıµÄº¯ÊıÊµÏÖÎÄ¼ş
-    % Y £º»ù´øĞÅºÅ
-    % A £º¹ıÍê±¸»ù
-    % P £º ĞÅÔ´ÊıÄ¿
-    f0 = 77e9; % ÆµÂÊ
-    c = 3e8; % ¹âËÙ
-    lambda = c / f0; % ²¨³¤
-    d = lambda / 2; % ÕóÔª¼ä¾à
-    [M, snap] = size(Y); % ÕóÔª ¿ìÅÄ
+    % æœ¬ç¨‹åºä¸ºvanilla-åŸå­èŒƒæ•°çš„å‡½æ•°å®ç°æ–‡ä»¶
+    % Y ï¼šåŸºå¸¦ä¿¡å·
+    % A ï¼šè¿‡å®Œå¤‡åŸº
+    % P ï¼š ä¿¡æºæ•°ç›®
+    f0 = 77e9; % é¢‘ç‡
+    c = 3e8; % å…‰é€Ÿ
+    lambda = c / f0; % æ³¢é•¿
+    d = lambda / 2; % é˜µå…ƒé—´è·
+    [M, snap] = size(Y); % é˜µå…ƒ å¿«æ‹
     
-    if snap == 1 % µ¥¿ìÅÄÄ£ĞÍ
-        sigma = 1; % ÔëÉù²ÎÊı
+    if snap == 1 % å•å¿«æ‹æ¨¡å‹
+        sigma = 1; % å™ªå£°å‚æ•°
         regular_param = sqrt(M * log(M * sigma));
         cvx_begin sdp quiet
         cvx_solver sdpt3
@@ -74,7 +74,7 @@ function PoutANM = DOA_ANM(Y, P)
 %         [Phi, Val] = rootmusic(T, P, 'corr');
 %         Phis = Phi / 2 / pi ;
 %         estimated_theta = asind(-Phis * lambda / d);
-    else % ¶à¿ìÅÄÄ£ĞÍ
+    else % å¤šå¿«æ‹æ¨¡å‹
         regular_param = sqrt(M * (snap + log(M) + sqrt(2 * snap * log(M))));
         cvx_begin sdp quiet
         cvx_solver sdpt3
@@ -84,7 +84,7 @@ function PoutANM = DOA_ANM(Y, P)
             minimize (regular_param * (trace(X) + trace(T)) + 1 / 2 * sum_square_abs(vec(Y - Z)));
             [X Y';Y T] >= 0;
         cvx_end
-%         [Phi, Val] = rootmusic(T, P, 'corr'); % ´ÓuÖĞ»Ö¸´³öÏàÎ»Öµ
+%         [Phi, Val] = rootmusic(T, P, 'corr'); % ä»uä¸­æ¢å¤å‡ºç›¸ä½å€¼
 %         Phis = Phi / 2 / pi ;
 %         estimated_theta = asind(-Phis * lambda / d);
     end

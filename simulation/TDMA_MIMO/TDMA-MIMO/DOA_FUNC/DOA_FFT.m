@@ -1,5 +1,5 @@
 function [PoutFFT] = DOA_FFT(arrData, cfgDOA)
-    %% 本文件为基于FFT的DOA/AOA估计
+    %% 鏈枃浠朵负鍩轰簬FFT鐨凞OA/AOA浼拌
     %% By Xuliang, 20230412
     
     doa_fft = fftshift(fft(arrData, cfgDOA.FFTNum)) * 2 / cfgDOA.FFTNum ;

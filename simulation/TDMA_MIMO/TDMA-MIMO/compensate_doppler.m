@@ -1,7 +1,7 @@
 function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, speedVal, rangeVal)
-    %% ±¾ÎÄ¼şÓÃÓÚÉú³ÉÓÉTDMA-MIMOµ¼ÖÂµÄ¶àÆÕÀÕ²¹³¥
+    %% æœ¬æ–‡ä»¶ç”¨äºç”Ÿæˆç”±TDMA-MIMOå¯¼è‡´çš„å¤šæ™®å‹’è¡¥å¿
     %% By Xuliang, 20230418
-    tarNum = length(dopplerIdx); % Ä¿±êÊıÄ¿
+    tarNum = length(dopplerIdx); % ç›®æ ‡æ•°ç›®
     numTx = cfgOut.numTx;
     numRx = cfgOut.numRx;
     ChirpNum = cfgOut.ChirpNum;
@@ -11,11 +11,11 @@ function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, 
     if cfgOut.applyVmaxExtend 
         sig_bin = [];
         info_overlaped_diff1tx = cfgOut.virtual_array.info_overlaped_diff1tx; 
-        if mod(numTx, 2) == 1 % ÌìÏßÊıÄ¿ÎªÆæÊı
-            tmpDopplerIdx = reshape(dopplerIdx, [], 1); % ÁÙÊ±¶àÆÕÀÕË÷Òı
+        if mod(numTx, 2) == 1 % å¤©çº¿æ•°ç›®ä¸ºå¥‡æ•°
+            tmpDopplerIdx = reshape(dopplerIdx, [], 1); % ä¸´æ—¶å¤šæ™®å‹’ç´¢å¼•
             dopplerInd_unwrap = tmpDopplerIdx + ((1:numTx) - ceil(numTx / 2)) * ChirpNum; % tarNum * TXNum
-        else % ÌìÏßÊıÄ¿ÎªÅ¼Êı
-            tmpDopplerIdx = reshape(dopplerIdx, [], 1); % ÁÙÊ±¶àÆÕÀÕË÷Òı
+        else % å¤©çº¿æ•°ç›®ä¸ºå¶æ•°
+            tmpDopplerIdx = reshape(dopplerIdx, [], 1); % ä¸´æ—¶å¤šæ™®å‹’ç´¢å¼•
             if speedVal > 0
                 dopplerInd_unwrap = tmpDopplerIdx + ((1:numTx)- (numTx / 2 + 1)) * ChirpNum; % tarNum * TXNum
             else
@@ -24,14 +24,14 @@ function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, 
         end
         
         sig_bin_org = doaInput; % TARNUM * RXNUM * TXNUM
-        deltaPhi = 2 * pi * (dopplerInd_unwrap - ChirpNum / 2) / (numTx * ChirpNum); % ¶àÆÕÀÕÏàÎ»ĞŞÕı tarNum * TXNUM 
+        deltaPhi = 2 * pi * (dopplerInd_unwrap - ChirpNum / 2) / (numTx * ChirpNum); % å¤šæ™®å‹’ç›¸ä½ä¿®æ­£ tarNum * TXNUM 
         deltaPhis(:, 1, 1, :) = deltaPhi; % tarNum * 1 * 1 * TXNUM
         tmpTX = (0 : numTx - 1);
         tmpTXs(1,1,:,1) = tmpTX; % tarNum * 1 * TXNUM
         correct_martrix = exp(-1j * tmpTXs .* deltaPhis); % tarNum * 1 * TXNUM * TXNUM
         sig_bin = sig_bin_org .* correct_martrix; % tarNum * RXNUM * TXNUM * TXNUM
 
-        % Ê¹ÓÃÖØµşÌìÏßÀ´×ö×î´óËÙ¶ÈµÄ½â°ü 
+        % ä½¿ç”¨é‡å å¤©çº¿æ¥åšæœ€å¤§é€Ÿåº¦çš„è§£åŒ… 
         nore_tx = [];
         nore_rx = [];
         re_tx = [];
@@ -48,7 +48,7 @@ function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, 
         end
         index_overlaped_diff1tx = cat(2, nore_rx.', nore_tx.', re_rx.', re_tx.'); % 32 * 4
         
-        % »ñÈ¡Î´ÈßÓàÕóÔªºÍÈßÓàÕóÔª¶ÔÓ¦µÄĞÅºÅ
+        % è·å–æœªå†—ä½™é˜µå…ƒå’Œå†—ä½™é˜µå…ƒå¯¹åº”çš„ä¿¡å·
         sig_overlap1 = zeros(tarNum, length(index_overlaped_diff1tx));
         sig_overlap2 = zeros(tarNum, length(index_overlaped_diff1tx));
         for iid = 1 : length(index_overlaped_diff1tx)
@@ -61,7 +61,7 @@ function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, 
         end
         sig_overlap = cat(3, sig_overlap1, sig_overlap2); % tarNum * 32 * 2
         
-        angle_sum_test = zeros(size(sig_overlap,1), size(sig_overlap,2), size(deltaPhi,2)); % ¼ì²éÃ¿¸ö¼ÙÉèµÄÖØµşÌìÏß¶ÔÏàÎ»²î
+        angle_sum_test = zeros(size(sig_overlap,1), size(sig_overlap,2), size(deltaPhi,2)); % æ£€æŸ¥æ¯ä¸ªå‡è®¾çš„é‡å å¤©çº¿å¯¹ç›¸ä½å·®
         
         for sig_id = 1 : size(angle_sum_test,2)
             deltaPhiss(:, 1, :) = deltaPhi; % tarNum * 1 * TXnum
@@ -70,7 +70,7 @@ function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, 
             angle_sum_test(:, sig_id, :) = angle(sum(sig_overlap(:,1:sig_id,1) .* conj(signal2),2)); % tarNum * 32 * TXnum
         end
         [~, doppler_unwrap_integ_overlap_index] = min(abs(angle_sum_test),[],3); % tarNum * 1 * 32
-        doppler_unwrap_integ_overlap_index = squeeze(doppler_unwrap_integ_overlap_index); % Ñ¡ÔñÏàÎ»²î×îĞ¡µÄ¼ÙÉèÀ´¹À¼Æ½âÏµÊı
+        doppler_unwrap_integ_overlap_index = squeeze(doppler_unwrap_integ_overlap_index); % é€‰æ‹©ç›¸ä½å·®æœ€å°çš„å‡è®¾æ¥ä¼°è®¡è§£ç³»æ•°
         
         doppler_unwrap_integ_index = zeros(size(doppler_unwrap_integ_overlap_index, 1), 1);
         for i = 1:size(doppler_unwrap_integ_overlap_index, 1)
@@ -82,37 +82,37 @@ function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, 
             correct_sig(i, :, :) = squeeze(sig_bin(i, :, :, doppler_unwrap_integ_index(i))); 
         end
         
-        index_noapply = find(rangeVal <= cfgOut.min_dis_apply_vmax_extend); % Î´³¬³ö×îĞ¡¾àÀëÔ¼Êø
+        index_noapply = find(rangeVal <= cfgOut.min_dis_apply_vmax_extend); % æœªè¶…å‡ºæœ€å°è·ç¦»çº¦æŸ
         delta_phi_noapply = reshape(2 * pi * (dopplerIdx - ChirpNum / 2) / (numTx * ChirpNum),[],1);
-        sig_bin_noapply = doaInput .* (reshape(exp(-1j * delta_phi_noapply * tmpTX), size(delta_phi_noapply, 1), 1, size(tmpTX,2))); % µ¥Ò»ÏàÎ»Ô¼Êø
+        sig_bin_noapply = doaInput .* (reshape(exp(-1j * delta_phi_noapply * tmpTX), size(delta_phi_noapply, 1), 1, size(tmpTX,2))); % å•ä¸€ç›¸ä½çº¦æŸ
         correct_sig(index_noapply, :, :) = sig_bin_noapply(index_noapply, :, :);
         
         com_dopplerFFTOut = correct_sig;
         
-%         % ÏÂÃæÕâ²¿·ÖÔİÊ±Ã»ÓĞÓÃµ½ ÏÈ²»×ö¿¼ÂÇ ºóÃæÓĞÊ±¼äÔÙÎ¬»¤
-%         % ½Ç¶ÈÎ¬FFTĞÅÔë±ÈÇó½â
-%         noredundant_arr = cfgOut.virtual_array.noredundant_aziarr; % »ñÈ¡·½Î»Î¬¶ÈÌìÏß
+%         % ä¸‹é¢è¿™éƒ¨åˆ†æš‚æ—¶æ²¡æœ‰ç”¨åˆ° å…ˆä¸åšè€ƒè™‘ åé¢æœ‰æ—¶é—´å†ç»´æŠ¤
+%         % è§’åº¦ç»´FFTä¿¡å™ªæ¯”æ±‚è§£
+%         noredundant_arr = cfgOut.virtual_array.noredundant_aziarr; % è·å–æ–¹ä½ç»´åº¦å¤©çº¿
 %         noredundant_rows0 = [];
 %         noredundant_rows1 = [];
-%         rx_pos_set = noredundant_arr(:,3); % ½ÓÊÕÌìÏßÎ»ÖÃ¼¯ºÏ
-%         tx_pos_set = noredundant_arr(:,4); % ·¢ÉäÌìÏßÎ»ÖÃ¼¯ºÏ
+%         rx_pos_set = noredundant_arr(:,3); % æ¥æ”¶å¤©çº¿ä½ç½®é›†åˆ
+%         tx_pos_set = noredundant_arr(:,4); % å‘å°„å¤©çº¿ä½ç½®é›†åˆ
 %         for rx_id = 1 :length(virtual_array.noredundant_arr(rx_pos_set))
 %             rx_arr = rx_pos_set(rx_id);
-%             noredundant_rows0 = [noredundant_rows0, find(cfgOut.PosRX_BOARD_ID == rx_arr)]; % È·¶¨½ÓÊÕÌìÏßµÄĞòºÅ
+%             noredundant_rows0 = [noredundant_rows0, find(cfgOut.PosRX_BOARD_ID == rx_arr)]; % ç¡®å®šæ¥æ”¶å¤©çº¿çš„åºå·
 %         end
 %         for tx_id = 1 :length(virtual_array.noredundant_arr(tx_pos_set))
 %             tx_arr = tx_pos_set(tx_id);
-%             noredundant_rows1 = [noredundant_rows1, find(cfgOut.PosTX_Trans_ID == tx_arr)]; % È·¶¨·¢ÉäÌìÏßµÄË³ĞòĞòºÅ ²»ÊÇ°å×ÓÉÏÅÅÁĞ
+%             noredundant_rows1 = [noredundant_rows1, find(cfgOut.PosTX_Trans_ID == tx_arr)]; % ç¡®å®šå‘å°„å¤©çº¿çš„é¡ºåºåºå· ä¸æ˜¯æ¿å­ä¸Šæ’åˆ—
 %         end
 %         noredundant_rows = [noredundant_rows0;noredundant_rows1]; 
 %         
 %         sig_bin_row1 = zeros(tarNum, max(virtual_array.azi_arr)+1, max(virtual_array.ele_arr)+1, numTx); 
 %                 
-%         for trx_id = 1 : size(noredundant_rows1,1) % 86¸öÕóÁĞ
-%             sig_bin_row1(:, noredundant_rows(1,trx_id), noredundant_rows(2,trx_id), :) = sig_bin(:, noredundant_rows(1,trx_id), noredundant_rows(2,trx_id), :); % ÖØÅÅºóµÄĞÅºÅ¿Õ¼ä 1*12
+%         for trx_id = 1 : size(noredundant_rows1,1) % 86ä¸ªé˜µåˆ—
+%             sig_bin_row1(:, noredundant_rows(1,trx_id), noredundant_rows(2,trx_id), :) = sig_bin(:, noredundant_rows(1,trx_id), noredundant_rows(2,trx_id), :); % é‡æ’åçš„ä¿¡å·ç©ºé—´ 1*12
 %         end
 %         sig_bin_row1 = squeeze(sig_bin_row1(:,:,1,:)); % tarNum * 86 * txNum
-%         sig_bin_row1_fft = fftshift(fft(sig_bin_row1, angleFFT_size, 2), 2); % ·½Î»Î¬FFT
+%         sig_bin_row1_fft = fftshift(fft(sig_bin_row1, angleFFT_size, 2), 2); % æ–¹ä½ç»´FFT
 %         
 %         angle_bin_skip_left = 4;
 %         angle_bin_skip_right = 4;
@@ -121,7 +121,7 @@ function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, 
         
     else
         sig_bin_org = doaInput; % TARNUM * RXNUM * TXNUM
-        deltaPhi = 2 * pi * (dopplerIdx - ChirpNum / 2) / (numTx * ChirpNum); % ¶àÆÕÀÕÏàÎ»ĞŞÕı tarNum * 1
+        deltaPhi = 2 * pi * (dopplerIdx - ChirpNum / 2) / (numTx * ChirpNum); % å¤šæ™®å‹’ç›¸ä½ä¿®æ­£ tarNum * 1
         deltaPhi = deltaPhi.';
         tmpTX = (0 : numTx - 1); % 1 * TXNUM
         correct_martrix = exp(-1j * deltaPhi * tmpTX ); % TARNUM * TXNUM 

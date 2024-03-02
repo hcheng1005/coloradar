@@ -1,17 +1,17 @@
 function [tarOut] = ConfigureTarget()
-    %% ±¾ÎÄ¼şÓÃÓÚ·ÂÕæÅäÖÃÄ¿±ê²ÎÊı
+    %% æœ¬æ–‡ä»¶ç”¨äºä»¿çœŸé…ç½®ç›®æ ‡å‚æ•°
     %% By Xuliang, 20230411
     
-    tarOut.nums = 4; % Ä¿±êÊıÄ¿
+    tarOut.nums = 4; % ç›®æ ‡æ•°ç›®
     
-    % Ä¿±ê²ÎÊı: ¾àÀë ËÙ¶È ·½Î» ¸©Ñö RCS Ä¿±êÔöÒæ
-    tarOut.range = [5 10 15 18]; % ¾àÀë m
-    tarOut.velocity = [0.4 -0.3 0 0.6]; % ËÙ¶È m/s
-    tarOut.Azi = [15 -2 30 -25]; % Ä¿±ê·½Î»½Ç¶È
-    tarOut.Ele = [0 15 -5 8];     % Ä¿±ê¸©Ñö½Ç¶È
-    tarOut.RCS = [20 20 10 20];  % Ä¿±êRCSÖµ
-    tarOut.Gt  = [12 12 12 12];  % ·¢ÉäÔöÒæ
-    tarOut.Gr  = [12 12 12 13];  % ½ÓÊÕÔöÒæ
+    % ç›®æ ‡å‚æ•°: è·ç¦» é€Ÿåº¦ æ–¹ä½ ä¿¯ä»° RCS ç›®æ ‡å¢ç›Š
+    tarOut.range = [5 10 15 18]; % è·ç¦» m
+    tarOut.velocity = [0.4 -0.3 0 0.6]; % é€Ÿåº¦ m/s
+    tarOut.Azi = [15 -2 30 -25]; % ç›®æ ‡æ–¹ä½è§’åº¦
+    tarOut.Ele = [0 15 -5 8];     % ç›®æ ‡ä¿¯ä»°è§’åº¦
+    tarOut.RCS = [20 20 10 20];  % ç›®æ ‡RCSå€¼
+    tarOut.Gt  = [12 12 12 12];  % å‘å°„å¢ç›Š
+    tarOut.Gr  = [12 12 12 13];  % æ¥æ”¶å¢ç›Š
     tarOut.trueX = tarOut.range .* cosd(tarOut.Ele) .* sind(tarOut.Azi);
     tarOut.trueY = tarOut.range .* cosd(tarOut.Ele) .* cosd(tarOut.Azi);
     tarOut.trueZ = tarOut.range .* sind(tarOut.Ele);

@@ -1,22 +1,22 @@
 function [PoutMusic] = DOA_MUSIC(X, P, thetaGrids)
-    % X: ÊäÈëĞÅºÅ Channel * ChirpNum
-    % P: Ä¿±êÊıÄ¿
-    % PoutMusic: Êä³ö¹¦ÂÊÆ×
+    % X: è¾“å…¥ä¿¡å· Channel * ChirpNum
+    % P: ç›®æ ‡æ•°ç›®
+    % PoutMusic: è¾“å‡ºåŠŸç‡è°±
     
-    M = size(X, 1); % ÕóÔªÊı
-    snap = size(X, 2); % ¿ìÅÄÊı
-    RX = X * X' / snap; % Ğ­·½²î¾ØÕó
+    M = size(X, 1); % é˜µå…ƒæ•°
+    snap = size(X, 2); % å¿«æ‹æ•°
+    RX = X * X' / snap; % åæ–¹å·®çŸ©é˜µ
     
-    [V, D] = eig(RX); % ÌØÕ÷Öµ·Ö½â
-    eig_value = real(diag(D)); % ÌáÈ¡ÌØÕ÷Öµ
-    [B, I] = sort(eig_value, 'descend'); % ÅÅĞòÌØÕ÷Öµ
-    EN = V(:, I(P+1:end)); % ÌáÈ¡ÔëÉù×Ó¿Õ¼ä
+    [V, D] = eig(RX); % ç‰¹å¾å€¼åˆ†è§£
+    eig_value = real(diag(D)); % æå–ç‰¹å¾å€¼
+    [B, I] = sort(eig_value, 'descend'); % æ’åºç‰¹å¾å€¼
+    EN = V(:, I(P+1:end)); % æå–å™ªå£°å­ç©ºé—´
     
     PoutMusic = zeros(1, length(thetaGrids));
     
     for id = 1 : length(thetaGrids)
-        atheta_vec = exp(1j * 2 * pi * [0:M-1]' * 1 / 2 * sind(thetaGrids(id))); % µ¼ÏòÊ¸Á¿
-        PoutMusic(id) = ((1 / (atheta_vec' * EN * EN' * atheta_vec))) ; % ¹¦ÂÊÆ×¼ÆËã
+        atheta_vec = exp(1j * 2 * pi * [0:M-1]' * 1 / 2 * sind(thetaGrids(id))); % å¯¼å‘çŸ¢é‡
+        PoutMusic(id) = ((1 / (atheta_vec' * EN * EN' * atheta_vec))) ; % åŠŸç‡è°±è®¡ç®—
     end
 end
 

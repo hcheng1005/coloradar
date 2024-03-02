@@ -1,17 +1,17 @@
 function PoutIAA = DOA_IAA(X, A, params)
-    % ±¾³ÌÐòÓÃÓÚÊµÏÖIAAËã·¨µÄ3ÖÖ±äÌåÐÎÊ½
-    % ²Î¿¼ÎÄÏ×:AReduced ComplexityApproach to IAA Beamforming for
+    % æœ¬ç¨‹åºç”¨äºŽå®žçŽ°IAAç®—æ³•çš„3ç§å˜ä½“å½¢å¼
+    % å‚è€ƒæ–‡çŒ®:AReduced ComplexityApproach to IAA Beamforming for
     % Efficient DOA Estimation of Coherent Sources
     % By Xuliang, 20230301
-    % X : ÊäÈë»ù´øÐÅºÅ
-    % A : ×Öµä¾ØÕó
+    % X : è¾“å…¥åŸºå¸¦ä¿¡å·
+    % A : å­—å…¸çŸ©é˜µ
     % params : (mode, iter_num1, iter_num2, beta_thres)
-    % mode: Ñ¡ÔñËã·¨ÔËÐÐµÄÄ£Ê½ IAA-APES/IAA-ML/IAA-RC
-    % iter_num1 : µÚÒ»ÂÖµü´ú´ÎÊý  iter_num2 µÚ¶þÂÖµü´ú´ÎÊý
-    % beta_res : ÃÅÏÞÏµÊý¡¾Õë¶ÔRC/RCML¡¿
+    % mode: é€‰æ‹©ç®—æ³•è¿è¡Œçš„æ¨¡å¼ IAA-APES/IAA-ML/IAA-RC
+    % iter_num1 : ç¬¬ä¸€è½®è¿­ä»£æ¬¡æ•°  iter_num2 ç¬¬äºŒè½®è¿­ä»£æ¬¡æ•°
+    % beta_res : é—¨é™ç³»æ•°ã€é’ˆå¯¹RC/RCMLã€‘
     
-    [M, snap] = size(X); % ÕóÁÐÊýÄ¿ * ¿ìÅÄ
-    thetaNum = size(A, 2); % Ô­×ÓÊýÄ¿
+    [M, snap] = size(X); % é˜µåˆ—æ•°ç›® * å¿«æ‹
+    thetaNum = size(A, 2); % åŽŸå­æ•°ç›®
     threshold = params.threshold;
     mode = params.mode;
     if strcmp(mode, "APES")
@@ -77,8 +77,8 @@ function PoutIAA = DOA_IAA(X, A, params)
             Pold = diag(P);
         end
 
-        [Pval, idx] = sort(P); % ÉýÐò
-        [Rrow] = find(Pval > beta_thres * P(idx(1))); % Ò×Îóµã: ²»µÈÊ½ÓÒ±ßÎªÅÅÐòºó×îÐ¡ÔªËØÖµ³ËÒÔÃÅÏÞ ×ó±ßÎªÅÅÐòÔªËØÖµ Ä¿µÄÊÇÕÒµ½µÚÒ»¸öÂú×ããÐÖµµÄÔªËØÁÐ±ê
+        [Pval, idx] = sort(P); % å‡åº
+        [Rrow] = find(Pval > beta_thres * P(idx(1))); % æ˜“è¯¯ç‚¹: ä¸ç­‰å¼å³è¾¹ä¸ºæŽ’åºåŽæœ€å°å…ƒç´ å€¼ä¹˜ä»¥é—¨é™ å·¦è¾¹ä¸ºæŽ’åºå…ƒç´ å€¼ ç›®çš„æ˜¯æ‰¾åˆ°ç¬¬ä¸€ä¸ªæ»¡è¶³é˜ˆå€¼çš„å…ƒç´ åˆ—æ ‡
         Ridx = Rrow(1);
 
         Q_left = (A(:, idx(1:Ridx-1)) * diag(P(idx(1 : Ridx-1))) * A(:, idx(1:Ridx-1))');

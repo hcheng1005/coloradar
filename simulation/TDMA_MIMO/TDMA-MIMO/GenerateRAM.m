@@ -1,23 +1,23 @@
 function RAM = GenerateRAM(rangeFFTOut, cfgOut, cfgDOA)
-    %% ±¾ÎÄ¼şÓÃÓÚÊµÏÖ¾àÀë-·½Î»Í¼Éú³É
-    %% ÕâÀï¶ªÆúµôÁË¶àÆÕÀÕÎ¬ĞÅÏ¢À´´æ´¢¿ìÅÄ
+    %% æœ¬æ–‡ä»¶ç”¨äºå®ç°è·ç¦»-æ–¹ä½å›¾ç”Ÿæˆ
+    %% è¿™é‡Œä¸¢å¼ƒæ‰äº†å¤šæ™®å‹’ç»´ä¿¡æ¯æ¥å­˜å‚¨å¿«æ‹
     %% By Xuliang,20230421
     
-    rangeNum = size(rangeFFTOut, 1); % »ñÈ¡¾àÀëµ¥ÔªÊıÄ¿
-    thetaGrids = cfgDOA.thetaGrids; % Íø¸ñ
-    virtual_array = cfgOut.virtual_array; % ĞéÄâÕóÁĞ
+    rangeNum = size(rangeFFTOut, 1); % è·å–è·ç¦»å•å…ƒæ•°ç›®
+    thetaGrids = cfgDOA.thetaGrids; % ç½‘æ ¼
+    virtual_array = cfgOut.virtual_array; % è™šæ‹Ÿé˜µåˆ—
     
-    RAM = zeros(rangeNum, length(thetaGrids)); % ³õÊ¼»¯RAM
+    RAM = zeros(rangeNum, length(thetaGrids)); % åˆå§‹åŒ–RAM
     for rangeIdx = 1 : rangeNum
-       arrData = squeeze(rangeFFTOut(rangeIdx, :, :)); % ÕóÁĞÊı¾İ ChirpNum * arrNum
+       arrData = squeeze(rangeFFTOut(rangeIdx, :, :)); % é˜µåˆ—æ•°æ® ChirpNum * arrNum
        sig = reshape(arrData, size(arrData,1), cfgOut.numRx, cfgOut.numTx); % ChirpNum * RXNum * TXNum 
-       tmpSig = zeros(size(arrData,1), max(virtual_array.azi_arr)+1, max(virtual_array.ele_arr)+1); % ³õÊ¼»¯ĞÅºÅ×Ó¿Õ¼ä
+       tmpSig = zeros(size(arrData,1), max(virtual_array.azi_arr)+1, max(virtual_array.ele_arr)+1); % åˆå§‹åŒ–ä¿¡å·å­ç©ºé—´
        for trx_id = 1 : size(cfgOut.sigIdx,2)
-           tmpSig(:, cfgOut.sigSpaceIdx(1, trx_id), cfgOut.sigSpaceIdx(2,trx_id)) = sig(:, cfgOut.sigIdx(1,trx_id), cfgOut.sigIdx(2,trx_id)); % ÖØÅÅºóµÄĞÅºÅ¿Õ¼ä
+           tmpSig(:, cfgOut.sigSpaceIdx(1, trx_id), cfgOut.sigSpaceIdx(2,trx_id)) = sig(:, cfgOut.sigIdx(1,trx_id), cfgOut.sigIdx(2,trx_id)); % é‡æ’åçš„ä¿¡å·ç©ºé—´
        end
-       aziData = squeeze(tmpSig(:, :, 1)); % ½öÌáÈ¡·½Î»Í¨µÀ
+       aziData = squeeze(tmpSig(:, :, 1)); % ä»…æå–æ–¹ä½é€šé“
        [doaOut] = azimuthDOA(aziData.', cfgDOA);
-       RAM(rangeIdx, :) = doaOut.spectrum; % ´æ´¢Ã¿¸ö¾àÀëµ¥Ôª¶ÔÓ¦µÄ¿Õ¼äÆ×
+       RAM(rangeIdx, :) = doaOut.spectrum; % å­˜å‚¨æ¯ä¸ªè·ç¦»å•å…ƒå¯¹åº”çš„ç©ºé—´è°±
 
     end
 end

@@ -1,93 +1,93 @@
 function  [sumClu]=dbscanClustering(eps,Obj,xFactor,yFactor,minPointsInCluster,FrameIndx)
    
-    % ¾ÛÀàÅĞ¶¨×¼Ôò£º        (x-r0)^2/xFactor^2  + (y-y0)^2/yFactor^2 + (v-v0)^2 /vFactor^2 < eps^2   
-    % maxClusters£º        ×î´ó¾ÛÀàÊı
-    % minPointsInCluster£º Ò»¸öclusterÖĞ×îĞ¡µãÊı
-    % maxPoints£º          Ò»¸öclusterÖĞÔÊĞí×î¶àµãÊı
-    % Obj±ê×¼Êı¾İ½á¹¹       = [x,y,R,v£¬peakVal£¬SNR£¬aoaVar];
+    % èšç±»åˆ¤å®šå‡†åˆ™ï¼š        (x-r0)^2/xFactor^2  + (y-y0)^2/yFactor^2 + (v-v0)^2 /vFactor^2 < eps^2   
+    % maxClustersï¼š        æœ€å¤§èšç±»æ•°
+    % minPointsInClusterï¼š ä¸€ä¸ªclusterä¸­æœ€å°ç‚¹æ•°
+    % maxPointsï¼š          ä¸€ä¸ªclusterä¸­å…è®¸æœ€å¤šç‚¹æ•°
+    % Objæ ‡å‡†æ•°æ®ç»“æ„       = [x,y,R,vï¼ŒpeakValï¼ŒSNRï¼ŒaoaVar];
   
-    %²ÎÊı
-    epsilon2_= eps*eps; % ÁÚÓò°ë¾¶      
-    numPoints =	size(Obj,1); % µãÊı
-    visited = zeros(numPoints,1); % ·ÃÎÊ¾ØÕó£¬ÓÃÓÚ¼ÇÂ¼ÊÇ·ñ·ÃÎÊ
-    clusterId = 0; % Ä¿±êĞòºÅ
+    %å‚æ•°
+    epsilon2_= eps*eps; % é‚»åŸŸåŠå¾„      
+    numPoints =	size(Obj,1); % ç‚¹æ•°
+    visited = zeros(numPoints,1); % è®¿é—®çŸ©é˜µï¼Œç”¨äºè®°å½•æ˜¯å¦è®¿é—®
+    clusterId = 0; % ç›®æ ‡åºå·
     sumClu=[]; 
     
     colors = 'bgrcm';
     for i=1:numPoints
         
-        if visited(i) == 0 %Î´±ê¼Çµã ½«ËùÓĞµÄµã±ê¼ÇÎª0
-            visited(i) = 1; %È¡µÚÒ»¸öºËĞÄµãq£¬±ê¼ÇÎª1
-            tempIdx = i; % ÓÃÓÚ±ê¼Çµ±Ç°µã   
-            x = Obj(i,1); % ÓÃÓÚ»ñÈ¡µ±Ç°µãµÄx×ø±ê
-            y = Obj(i,2); % ÓÃÓÚ»ñÈ¡µ±Ç°µãµÄy×ø±ê
+        if visited(i) == 0 %æœªæ ‡è®°ç‚¹ å°†æ‰€æœ‰çš„ç‚¹æ ‡è®°ä¸º0
+            visited(i) = 1; %å–ç¬¬ä¸€ä¸ªæ ¸å¿ƒç‚¹qï¼Œæ ‡è®°ä¸º1
+            tempIdx = i; % ç”¨äºæ ‡è®°å½“å‰ç‚¹   
+            x = Obj(i,1); % ç”¨äºè·å–å½“å‰ç‚¹çš„xåæ ‡
+            y = Obj(i,2); % ç”¨äºè·å–å½“å‰ç‚¹çš„yåæ ‡
 
             numInEps=1; 
-            for k=1:numPoints % ±éÀúËùÓĞµã
-                if visited(k) == 0 % ×´Ì¬0  
+            for k=1:numPoints % éå†æ‰€æœ‰ç‚¹
+                if visited(k) == 0 % çŠ¶æ€0  
                     summ = (Obj(k,1)-x)^2/xFactor^2+...
                          (Obj(k,2)-y)^2 /yFactor^2;
-                    if summ < epsilon2_  % Èç¹ûÂú×ã¾àÀë×¼Ôò£¬Ôò¸ÃµãÊôÓÚ´Ëcluster
-                        numInEps = numInEps+ 1; % ÁÚ¾Ó½ÚµãÊı+1                  
-                        tempIdx = [tempIdx k]; % ´æ´¢Ä¿±êµã
+                    if summ < epsilon2_  % å¦‚æœæ»¡è¶³è·ç¦»å‡†åˆ™ï¼Œåˆ™è¯¥ç‚¹å±äºæ­¤cluster
+                        numInEps = numInEps+ 1; % é‚»å±…èŠ‚ç‚¹æ•°+1                  
+                        tempIdx = [tempIdx k]; % å­˜å‚¨ç›®æ ‡ç‚¹
                     end
                 end
             end        
             
-            if numInEps > minPointsInCluster % Èç¹ûÁÚ¾Ó½ÚµãÊı>ÒªÇóµÄ×îĞ¡ÁÚ¾Ó½ÚµãÊı
-                visited(i) = 1;   % ½«µÚiµã±ê¼ÇÎªºËĞÄµã
-                for in = 1:numInEps   % ±éÀúÂú×ã¾àÀë¹æÔòµÄµã£¬²¢±ê¼ÇÎªÒÑ·ÃÎÊ
+            if numInEps > minPointsInCluster % å¦‚æœé‚»å±…èŠ‚ç‚¹æ•°>è¦æ±‚çš„æœ€å°é‚»å±…èŠ‚ç‚¹æ•°
+                visited(i) = 1;   % å°†ç¬¬iç‚¹æ ‡è®°ä¸ºæ ¸å¿ƒç‚¹
+                for in = 1:numInEps   % éå†æ»¡è¶³è·ç¦»è§„åˆ™çš„ç‚¹ï¼Œå¹¶æ ‡è®°ä¸ºå·²è®¿é—®
                     visited(tempIdx(in)) = 1;   
                 end
                 
                 next = 2;
-                while next <= length(tempIdx) % ÒÀ´Î·ÃÎÊ±ê¼ÇµÄ½Úµã
+                while next <= length(tempIdx) % ä¾æ¬¡è®¿é—®æ ‡è®°çš„èŠ‚ç‚¹
                     point_ref = tempIdx(next);
                     x = Obj(point_ref,1);
                     y = Obj(point_ref,2);
                     tempInd = [];
-                    for ind=1:numPoints % ½«±ê¼Ç½Úµã×÷ÎªºËĞÄ½Úµã£¬¶ÔËùÓĞµã±éÀú
-                        if visited(ind) == 0 % ×´Ì¬0  
+                    for ind=1:numPoints % å°†æ ‡è®°èŠ‚ç‚¹ä½œä¸ºæ ¸å¿ƒèŠ‚ç‚¹ï¼Œå¯¹æ‰€æœ‰ç‚¹éå†
+                        if visited(ind) == 0 % çŠ¶æ€0  
                             summ = (Obj(ind,1)-x)^2/xFactor^2+...
                                  (Obj(ind,2)-y)^2/yFactor^2;                            
-                            if summ < epsilon2_ % ²é¿´ÊÇ·ñËùÓĞµã¶¼Âú×ã¾àÀë¹æÔò
-                               tempInd = [tempInd ind]; % Âú×ãÔò½«¸Ãµã¼ÓÈë
+                            if summ < epsilon2_ % æŸ¥çœ‹æ˜¯å¦æ‰€æœ‰ç‚¹éƒ½æ»¡è¶³è·ç¦»è§„åˆ™
+                               tempInd = [tempInd ind]; % æ»¡è¶³åˆ™å°†è¯¥ç‚¹åŠ å…¥
                             end
                         end
                     end
 
-                    if length(tempInd) > minPointsInCluster % Èç¹ûºËĞÄµãµÄ´ØÄÚ½ÚµãÁÚ¾ÓÒ²Âú×ã×îĞ¡¾ÛÀàµãÊı
-                        visited(point_ref) = 1;  % ±ê¼Ç´ØÄÚ½ÚµãÎªºËĞÄ½Úµã£¬ÈÏÎªÍ¬Àà
-                        numInEps = numInEps+ length(tempInd); % ¼ÆËã´ØÄÚµãÊıÄ¿
+                    if length(tempInd) > minPointsInCluster % å¦‚æœæ ¸å¿ƒç‚¹çš„ç°‡å†…èŠ‚ç‚¹é‚»å±…ä¹Ÿæ»¡è¶³æœ€å°èšç±»ç‚¹æ•°
+                        visited(point_ref) = 1;  % æ ‡è®°ç°‡å†…èŠ‚ç‚¹ä¸ºæ ¸å¿ƒèŠ‚ç‚¹ï¼Œè®¤ä¸ºåŒç±»
+                        numInEps = numInEps+ length(tempInd); % è®¡ç®—ç°‡å†…ç‚¹æ•°ç›®
                         tempIdx = [tempIdx tempInd]; 
                         for kk = 1:length(tempInd)
-                            visited(tempInd(kk)) = 1;  % ±ê¼ÇÎªÒÑ·ÃÎÊ
+                            visited(tempInd(kk)) = 1;  % æ ‡è®°ä¸ºå·²è®¿é—®
                         end
                     else
-                        visited(point_ref) = -1; %²»Âú×ã×îĞ¡¾ÛÀàµãÊıÔòÈÏÎªÊÇ±ß½çµã
+                        visited(point_ref) = -1; %ä¸æ»¡è¶³æœ€å°èšç±»ç‚¹æ•°åˆ™è®¤ä¸ºæ˜¯è¾¹ç•Œç‚¹
                     end
                     next = next+1;
                 end
                 
-                tempClu = Obj(tempIdx,:); % obj = [ X,Y,h ,objSpeed,snr]; »ñÈ¡ºËĞÄµãµÄÊôĞÔĞÅÏ¢
+                tempClu = Obj(tempIdx,:); % obj = [ X,Y,h ,objSpeed,snr]; è·å–æ ¸å¿ƒç‚¹çš„å±æ€§ä¿¡æ¯
                 cluLength = size(tempIdx,2);
               
-                for pp = 1:cluLength % ¶ÔÃ¿¸ö´ØÑ­»·
+                for pp = 1:cluLength % å¯¹æ¯ä¸ªç°‡å¾ªç¯
                     ind = tempIdx(pp); 
-                    if  visited(ind) == 1 % »æÖÆºËĞÄµã
+                    if  visited(ind) == 1 % ç»˜åˆ¶æ ¸å¿ƒç‚¹
                          plot(tempClu(pp,1),tempClu(pp,2),'.','color', colors(mod(clusterId,length(colors))+1));
                          hold on;
-                    elseif  visited(ind) == -1  % »æÖÆ±ß½çµã
+                    elseif  visited(ind) == -1  % ç»˜åˆ¶è¾¹ç•Œç‚¹
                            plot(tempClu(pp,1),tempClu(pp,2),'*','color', colors(mod(clusterId,length(colors))+1));                    
                          hold on;
                     end
                 end
-                title(['¾ÛÀà½á¹û£º£¨*:±ß½çµã , o£ººËĞÄµã , .:ÔëÉùµã)Ö¡Êı£º',num2str(FrameIndx)]);
-                xlabel('µã¼£Ë®Æ½Î»ÖÃ £º m');
-                ylabel('µã¼£´¹Ö±Î»ÖÃ £º m');
+                title(['èšç±»ç»“æœï¼šï¼ˆ*:è¾¹ç•Œç‚¹ , oï¼šæ ¸å¿ƒç‚¹ , .:å™ªå£°ç‚¹)å¸§æ•°ï¼š',num2str(FrameIndx)]);
+                xlabel('ç‚¹è¿¹æ°´å¹³ä½ç½® ï¼š m');
+                ylabel('ç‚¹è¿¹å‚ç›´ä½ç½® ï¼š m');
                 hold on;
             else
-                visited(i) = -2; %ÔëÉùµã  
+                visited(i) = -2; %å™ªå£°ç‚¹  
                 cluLength = 1;
                 plot(Obj(i,1),Obj(i,2),'r.');
                 hold on;
@@ -96,18 +96,18 @@ function  [sumClu]=dbscanClustering(eps,Obj,xFactor,yFactor,minPointsInCluster,F
             if cluLength > 1 
                 clusterId = clusterId+1; % New cluster ID
                 output_IndexArray(tempIdx) = clusterId;
-                sumClu(clusterId).numPoints = cluLength; % ´ØÄÚ³¤¶È
-                sumClu(clusterId).x_mean = mean(tempClu(:,1));  % ´ØÄÚµãÆ½¾ùx×ø±ê
-                sumClu(clusterId).y_mean = mean(tempClu(:,2));  % ´ØÄÚµãÆ½¾ùy×ø±ê
-%                 sumClu(clusterId).z_mean = mean(tempClu(:,3));  % ´ØÄÚµãÆ½¾ùz×ø±ê
+                sumClu(clusterId).numPoints = cluLength; % ç°‡å†…é•¿åº¦
+                sumClu(clusterId).x_mean = mean(tempClu(:,1));  % ç°‡å†…ç‚¹å¹³å‡xåæ ‡
+                sumClu(clusterId).y_mean = mean(tempClu(:,2));  % ç°‡å†…ç‚¹å¹³å‡yåæ ‡
+%                 sumClu(clusterId).z_mean = mean(tempClu(:,3));  % ç°‡å†…ç‚¹å¹³å‡zåæ ‡
 
-               % Í¨¹ıSNR¼ÓÈ¨
+               % é€šè¿‡SNRåŠ æƒ
                sumClu(clusterId).x_SNR = (1./tempClu(:,end)')*tempClu(:,1)/sum(1./tempClu(:,end));   
                sumClu(clusterId).y_SNR = (1./tempClu(:,end)')*tempClu(:,2)/sum(1./tempClu(:,end)); 
 %                sumClu(clusterId).z_SNR = (1./tempClu(:,end)')*tempClu(:,3)/sum(1./tempClu(:,end));
 
-                % ½öÈ¡·åÖµ
-                [ ~,I] = max(1./tempClu(:,end)); % snr·åÖµ
+                % ä»…å–å³°å€¼
+                [ ~,I] = max(1./tempClu(:,end)); % snrå³°å€¼
                 tempx = tempClu(:,1);
                 tempy = tempClu(:,2);
 %                 tempz = tempClu(:,3);
@@ -116,19 +116,19 @@ function  [sumClu]=dbscanClustering(eps,Obj,xFactor,yFactor,minPointsInCluster,F
                 sumClu(clusterId).y_peak = tempy(I);
 %                 sumClu(clusterId).z_peak = tempz(I);
 
-                % yÈ¡×î½üÎ»ÖÃ xÈ¡¾ùÖµ
+                % yå–æœ€è¿‘ä½ç½® xå–å‡å€¼
                 sumClu(clusterId).x_edge = mean(tempClu(:,1));   
                 sumClu(clusterId).y_edge = min(tempClu(: ,2));
 %                 sumClu(clusterId).z_edge = mean(tempClu(:,3));
      
-                sumClu(clusterId).x = sumClu(clusterId).x_mean; % ÌáÈ¡Æ½¾ùx×ø±ê  
-                sumClu(clusterId).y = sumClu(clusterId).y_mean; % ÌáÈ¡Æ½¾ùy×ø±ê  
-%                 sumClu(clusterId).z = sumClu(clusterId).z_mean; % ÌáÈ¡Æ½¾ùz×ø±ê  
+                sumClu(clusterId).x = sumClu(clusterId).x_mean; % æå–å¹³å‡xåæ ‡  
+                sumClu(clusterId).y = sumClu(clusterId).y_mean; % æå–å¹³å‡yåæ ‡  
+%                 sumClu(clusterId).z = sumClu(clusterId).z_mean; % æå–å¹³å‡zåæ ‡  
         
                 sumClu(clusterId).xsize = max(abs(tempClu(:,1) - sumClu(clusterId).x));
                 sumClu(clusterId).ysize = max(abs(tempClu(:,2) - sumClu(clusterId).y));
 %                 sumClu(clusterId).zsize = max(abs(tempClu(:,3) - sumClu(clusterId).z));
-                sumClu(clusterId).v = mean(tempClu(:,end-1)); % ËÙ¶È
+                sumClu(clusterId).v = mean(tempClu(:,end-1)); % é€Ÿåº¦
                 sumClu(clusterId).head =  sumClu(clusterId).y - sumClu(clusterId).ysize/2;
 
                 if sumClu(clusterId).xsize < 1e-3
@@ -139,9 +139,9 @@ function  [sumClu]=dbscanClustering(eps,Obj,xFactor,yFactor,minPointsInCluster,F
                 end
 
                 if cluLength>1
-                   sumClu(clusterId).centerRangeVar = var(sqrt(tempClu(:,1).^2+tempClu(:,2).^2)); % ¾àÀë·½²î
+                   sumClu(clusterId).centerRangeVar = var(sqrt(tempClu(:,1).^2+tempClu(:,2).^2)); % è·ç¦»æ–¹å·®
                    sumClu(clusterId).centerAngleVar = mean(deg2rad(atand(tempClu(:,2)/(tempClu(:,1)+eps))).^2); 
-                   sumClu(clusterId).centerDopplerVar = var(tempClu(:,end-1)); % ¶àÆÕÀÕ·½²î
+                   sumClu(clusterId).centerDopplerVar = var(tempClu(:,end-1)); % å¤šæ™®å‹’æ–¹å·®
 
                 else
                    sumClu(clusterId).centerRangeVar = 1;

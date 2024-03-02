@@ -1,17 +1,17 @@
 function [cfgOut] = ConfigureParameter()
-    %% ±¾ÎÄ¼şÓÃÓÚ·ÂÕæÅäÖÃºÁÃ×²¨À×´ïÏµÍ³²ÎÊı
+    %% æœ¬æ–‡ä»¶ç”¨äºä»¿çœŸé…ç½®æ¯«ç±³æ³¢é›·è¾¾ç³»ç»Ÿå‚æ•°
     %% By Xuliang, 20230411
-    cfgOut.Mode = 1; % ·ÂÕæÄ£Ê½
-    cfgOut.ADCNum = 256; % ADC²ÉÑùÊıÄ¿
-    cfgOut.ChirpNum = 128; % Ã¿Ö¡·¢ÉäChirpÊıÄ¿
-    cfgOut.Frame = 1; % ×ÜÖ¡Êı
-    cfgOut.applyVmaxExtend = 1; % ÔÊĞíËÙ¶ÈÀ©Õ¹
+    cfgOut.Mode = 1; % ä»¿çœŸæ¨¡å¼
+    cfgOut.ADCNum = 256; % ADCé‡‡æ ·æ•°ç›®
+    cfgOut.ChirpNum = 128; % æ¯å¸§å‘å°„Chirpæ•°ç›®
+    cfgOut.Frame = 1; % æ€»å¸§æ•°
+    cfgOut.applyVmaxExtend = 1; % å…è®¸é€Ÿåº¦æ‰©å±•
     if cfgOut.applyVmaxExtend
-        cfgOut.min_dis_apply_vmax_extend = 10; % ÔÊĞíËÙ¶ÈÀ©Õ¹µÄ×îĞ¡¾àÀë
+        cfgOut.min_dis_apply_vmax_extend = 10; % å…è®¸é€Ÿåº¦æ‰©å±•çš„æœ€å°è·ç¦»
     end
     
     if cfgOut.Mode == 1 
-        disp(strcat(['=====','ÒÑÑ¡ÔñAWR1243-µ¥°åÀ×´ïÄ£Ê½','====='])); % µ¥°åÀ×´ïÄ£Ê½3T4R
+        disp(strcat(['=====','å·²é€‰æ‹©AWR1243-å•æ¿é›·è¾¾æ¨¡å¼','====='])); % å•æ¿é›·è¾¾æ¨¡å¼3T4R
         cfgOut.numTx = 3;
         cfgOut.numRx = 4;  
         
@@ -19,36 +19,36 @@ function [cfgOut] = ConfigureParameter()
         cfgOut.PosTX_Y = [0 1 0]; 
         cfgOut.PosRX_X = [0 1 2 3];
         cfgOut.PosRX_Y = [0 0 0 0];
-        cfgOut.PosTX_BOARD_ID = [1 2 3]; % ·¢ÉäÌìÏß°åÉÏË³Ğò ºóÃæÃ»ÓÃµ½
-        cfgOut.PosTX_Trans_ID = [1 3 2]; % ·¢ÉäÌìÏß·¢ÉäË³Ğò 
+        cfgOut.PosTX_BOARD_ID = [1 2 3]; % å‘å°„å¤©çº¿æ¿ä¸Šé¡ºåº åé¢æ²¡ç”¨åˆ°
+        cfgOut.PosTX_Trans_ID = [1 3 2]; % å‘å°„å¤©çº¿å‘å°„é¡ºåº 
         cfgOut.PosRX_X = [0 1 2 3];
         cfgOut.PosRX_Y = zeros(1,cfgOut.numRx); 
-        cfgOut.PosRX_BOARD_ID = [1 2 3 4]; % ½ÓÊÕÌìÏß°åÉÏË³Ğò
+        cfgOut.PosRX_BOARD_ID = [1 2 3 4]; % æ¥æ”¶å¤©çº¿æ¿ä¸Šé¡ºåº
         
     elseif cfgOut.Mode == 2
-        disp(strcat(['=====','ÒÑÑ¡ÔñAWR2243-¼¶ÁªÀ×´ïÄ£Ê½','====='])); % ¼¶ÁªÀ×´ïÄ£Ê½12T16R
+        disp(strcat(['=====','å·²é€‰æ‹©AWR2243-çº§è”é›·è¾¾æ¨¡å¼','====='])); % çº§è”é›·è¾¾æ¨¡å¼12T16R
         cfgOut.numTx = 12;
         cfgOut.numRx = 16;
         cfgOut.PosTX_X = [11 10 9 32 28 24 20 16 12 8 4 0];
         cfgOut.PosTX_Y = [6 4 1 0 0 0 0 0 0 0 0 0]; 
-        cfgOut.PosTX_BOARD_ID = [12 11 10 3 2 1 9 8 7 6 5 4]; % ·¢ÉäÌìÏß°åÉÏË³Ğò ºóÃæÃ»ÓÃµ½
-        cfgOut.PosTX_Trans_ID = [12:-1:1]; % ·¢ÉäÌìÏß·¢ÉäË³Ğò
+        cfgOut.PosTX_BOARD_ID = [12 11 10 3 2 1 9 8 7 6 5 4]; % å‘å°„å¤©çº¿æ¿ä¸Šé¡ºåº åé¢æ²¡ç”¨åˆ°
+        cfgOut.PosTX_Trans_ID = [12:-1:1]; % å‘å°„å¤©çº¿å‘å°„é¡ºåº
         
         cfgOut.PosRX_X = [11 12 13 14 50 51 52 53 46 47 48 49 0 1 2 3];
         cfgOut.PosRX_Y = zeros(1,cfgOut.numRx); 
-        cfgOut.PosRX_BOARD_ID = [13 14 15 16 1 2 3 4 9 10 11 12 5 6 7 8]; % ½ÓÊÕÌìÏß°åÉÏË³Ğò
+        cfgOut.PosRX_BOARD_ID = [13 14 15 16 1 2 3 4 9 10 11 12 5 6 7 8]; % æ¥æ”¶å¤©çº¿æ¿ä¸Šé¡ºåº
     elseif cfgOut.Mode == 3
-        disp(strcat(['=====','ÒÑÑ¡ÔñÌØË¹À­6T8R-¼¶ÁªÀ×´ïÄ£Ê½','=====']));
+        disp(strcat(['=====','å·²é€‰æ‹©ç‰¹æ–¯æ‹‰6T8R-çº§è”é›·è¾¾æ¨¡å¼','=====']));
         cfgOut.numTx = 6;
         cfgOut.numRx = 8;
         cfgOut.PosTX_X = [0 17 34 41 48 55];
         cfgOut.PosTX_Y = [0 0 0 0 4 8 12]; 
-        cfgOut.PosTX_BOARD_ID = [1 2 3 4 5 6]; % ·¢ÉäÌìÏß°åÉÏË³Ğò ºóÃæÃ»ÓÃµ½
-        cfgOut.PosTX_Trans_ID = [1 2 3 4 5 6]; % ·¢ÉäÌìÏß·¢ÉäË³Ğò
+        cfgOut.PosTX_BOARD_ID = [1 2 3 4 5 6]; % å‘å°„å¤©çº¿æ¿ä¸Šé¡ºåº åé¢æ²¡ç”¨åˆ°
+        cfgOut.PosTX_Trans_ID = [1 2 3 4 5 6]; % å‘å°„å¤©çº¿å‘å°„é¡ºåº
         
         cfgOut.PosRX_X = [0 2 3 5 8 11 14 17];
         cfgOut.PosRX_Y = zeros(1,cfgOut.numRx); 
-        cfgOut.PosRX_BOARD_ID = [1 2 3 4 5 6 7 8]; % ½ÓÊÕÌìÏß°åÉÏË³Ğò
+        cfgOut.PosRX_BOARD_ID = [1 2 3 4 5 6 7 8]; % æ¥æ”¶å¤©çº¿æ¿ä¸Šé¡ºåº
     end
     
     virtual_azi_arr = repmat(cfgOut.PosTX_X(cfgOut.PosTX_Trans_ID), cfgOut.numRx, 1) + repmat(cfgOut.PosRX_X(cfgOut.PosRX_BOARD_ID), cfgOut.numTx, 1).';
@@ -60,87 +60,87 @@ function [cfgOut] = ConfigureParameter()
     virtual_array.rx_id = reshape(repmat(cfgOut.PosRX_BOARD_ID, cfgOut.numTx, 1).',[],1);
     virtual_array.virtual_arr = cat(2,virtual_array.azi_arr,virtual_array.ele_arr,virtual_array.rx_id,virtual_array.tx_id);
     
-   % »ñÈ¡·ÇÈßÓàÕóÔª¶Ô
-    [~, noredundant_idx] = unique(virtual_array.virtual_arr(:,1:2),'rows'); % ¶ÔÔªËØÈ¥ÖØ
-    virtual_array.noredundant_arr = virtual_array.virtual_arr(noredundant_idx,:); % »ñÈ¡·ÇÈßÓàÕóÁĞµÄ·½Î»¡¢¸©Ñö¡¢ÊÕ·¢ID
-    virtual_array.noredundant_aziarr = virtual_array.noredundant_arr(virtual_array.noredundant_arr(:,2)==0,:); % »ñÈ¡·½Î»Î¬¶ÈÌìÏß
+   % è·å–éå†—ä½™é˜µå…ƒå¯¹
+    [~, noredundant_idx] = unique(virtual_array.virtual_arr(:,1:2),'rows'); % å¯¹å…ƒç´ å»é‡
+    virtual_array.noredundant_arr = virtual_array.virtual_arr(noredundant_idx,:); % è·å–éå†—ä½™é˜µåˆ—çš„æ–¹ä½ã€ä¿¯ä»°ã€æ”¶å‘ID
+    virtual_array.noredundant_aziarr = virtual_array.noredundant_arr(virtual_array.noredundant_arr(:,2)==0,:); % è·å–æ–¹ä½ç»´åº¦å¤©çº¿
     
-    % »ñÈ¡ÈßÓàÕóÔª¶Ô
-    redundant_idx = setxor([1:cfgOut.numRx*cfgOut.numTx],noredundant_idx); % 58 * 1 ·µ»Ø²»ÔÚ A ºÍ B µÄ½»¼¯ÖĞµÄÊı¾İ£¨¶Ô³Æ²î¼¯£©£¬²»°üÀ¨ÖØ¸´Ïî¡£
-    virtual_array.redundant_arr = virtual_array.virtual_arr(redundant_idx,:); % »ñÈ¡ÈßÓàÕóÁĞµÄ·½Î»¡¢¸©Ñö¡¢ÊÕ·¢ID
+    % è·å–å†—ä½™é˜µå…ƒå¯¹
+    redundant_idx = setxor([1:cfgOut.numRx*cfgOut.numTx],noredundant_idx); % 58 * 1 è¿”å›ä¸åœ¨ A å’Œ B çš„äº¤é›†ä¸­çš„æ•°æ®ï¼ˆå¯¹ç§°å·®é›†ï¼‰ï¼Œä¸åŒ…æ‹¬é‡å¤é¡¹ã€‚
+    virtual_array.redundant_arr = virtual_array.virtual_arr(redundant_idx,:); % è·å–å†—ä½™é˜µåˆ—çš„æ–¹ä½ã€ä¿¯ä»°ã€æ”¶å‘ID
     
-    % ²éÕÒ²¢¹ØÁªÖØµşµÄTX-RX¶Ô
-    if ~isempty(redundant_idx) % µ¥°å²»´æÔÚÈßÓàÕóÔª
+    % æŸ¥æ‰¾å¹¶å…³è”é‡å çš„TX-RXå¯¹
+    if ~isempty(redundant_idx) % å•æ¿ä¸å­˜åœ¨å†—ä½™é˜µå…ƒ
         info_overlaped_associate_arr = [];
         for re_arr_id = 1 : size(virtual_array.redundant_arr,1)
-            % ÕâÀïÊÇ¶ÔÈßÓàÕóÔªºÍ·ÇÈßÓàÕóÔª½øĞĞÆ¥Åä Êä³ö½á¹ûÎª[[T,F,F,T],...]µÈĞÎÊ½ Î¬¶ÈÎª134*4 Éú³ÉÑÚÂë
+            % è¿™é‡Œæ˜¯å¯¹å†—ä½™é˜µå…ƒå’Œéå†—ä½™é˜µå…ƒè¿›è¡ŒåŒ¹é… è¾“å‡ºç»“æœä¸º[[T,F,F,T],...]ç­‰å½¢å¼ ç»´åº¦ä¸º134*4 ç”Ÿæˆæ©ç 
             mask = virtual_array.noredundant_arr == virtual_array.redundant_arr(re_arr_id, :); 
-            mask = mask(:,1) & mask(:,2); % ÕâÀïÊÇ¶ÔÈßÓàÕóÔªºÍ·ÇÈßÓàÕóÔª½øĞĞÆ¥Åä Êä³ö½á¹ûÎª[[T,F,F,T],...]µÈĞÎÊ½ Î¬¶ÈÎª134*4
-            info_associate = virtual_array.noredundant_arr(mask,:); % ÕÒµ½ÈßÓàºÍ·ÇÈßÓàÖĞ½ÓÊÕºÍ·¢ÉäÌìÏßÖØµşµÄÔªËØ
-            info_overlaped = virtual_array.redundant_arr(re_arr_id,:); % µ±Ç°ÈßÓàÕóÔªÖµ
-            % ½«ÓĞ¹ØÁªµÄ·ÇÈßÓàÕóÔªºÍÈßÓàÕóÔª¼ÓÈëÁĞ±í ÖØµşµÄÒâË¼Ö¸µÄÊÇÓÉ²»Í¬TX-RXÌìÏß¶ÔĞÎ³ÉµÄÏàÎ»²îÊÇÏàÍ¬µÄ
+            mask = mask(:,1) & mask(:,2); % è¿™é‡Œæ˜¯å¯¹å†—ä½™é˜µå…ƒå’Œéå†—ä½™é˜µå…ƒè¿›è¡ŒåŒ¹é… è¾“å‡ºç»“æœä¸º[[T,F,F,T],...]ç­‰å½¢å¼ ç»´åº¦ä¸º134*4
+            info_associate = virtual_array.noredundant_arr(mask,:); % æ‰¾åˆ°å†—ä½™å’Œéå†—ä½™ä¸­æ¥æ”¶å’Œå‘å°„å¤©çº¿é‡å çš„å…ƒç´ 
+            info_overlaped = virtual_array.redundant_arr(re_arr_id,:); % å½“å‰å†—ä½™é˜µå…ƒå€¼
+            % å°†æœ‰å…³è”çš„éå†—ä½™é˜µå…ƒå’Œå†—ä½™é˜µå…ƒåŠ å…¥åˆ—è¡¨ é‡å çš„æ„æ€æŒ‡çš„æ˜¯ç”±ä¸åŒTX-RXå¤©çº¿å¯¹å½¢æˆçš„ç›¸ä½å·®æ˜¯ç›¸åŒçš„
             info_overlaped_associate_arr = [info_overlaped_associate_arr; [info_associate, info_overlaped]];
         end
-        diff_tx = abs(info_overlaped_associate_arr(:,8) - info_overlaped_associate_arr(:,4)); % ¼ÆËã·¢ÉäÌìÏßµÄÎ»ÖÃ²î
-        info_overlaped_diff1tx_arr = info_overlaped_associate_arr(diff_tx==1,:); % 32*8 ·¢ÉäÌìÏß²îÎª1µÄÖØµşÕóÔª
-        [sotedVal, sortedIdx] = sort(info_overlaped_diff1tx_arr(:, 1)); % °´·½Î»ÏàÎ»²îÅÅĞò
+        diff_tx = abs(info_overlaped_associate_arr(:,8) - info_overlaped_associate_arr(:,4)); % è®¡ç®—å‘å°„å¤©çº¿çš„ä½ç½®å·®
+        info_overlaped_diff1tx_arr = info_overlaped_associate_arr(diff_tx==1,:); % 32*8 å‘å°„å¤©çº¿å·®ä¸º1çš„é‡å é˜µå…ƒ
+        [sotedVal, sortedIdx] = sort(info_overlaped_diff1tx_arr(:, 1)); % æŒ‰æ–¹ä½ç›¸ä½å·®æ’åº
         virtual_array.info_overlaped_diff1tx = info_overlaped_diff1tx_arr(sortedIdx, :);
     else
-        cfgOut.applyVmaxExtend = 0; % ÔÊĞíËÙ¶ÈÀ©Õ¹
+        cfgOut.applyVmaxExtend = 0; % å…è®¸é€Ÿåº¦æ‰©å±•
     end
     
     sig_space_idx0 = virtual_array.noredundant_arr(:,1)+1;
     sig_space_idx1 = virtual_array.noredundant_arr(:,2)+1;
     sig_idx0 = [];
     sig_idx1 = [];
-    rx_pos_set = virtual_array.noredundant_arr(:,3); % ½ÓÊÕÌìÏßÎ»ÖÃ¼¯ºÏ
-    tx_pos_set = virtual_array.noredundant_arr(:,4); % ·¢ÉäÌìÏßÎ»ÖÃ¼¯ºÏ
+    rx_pos_set = virtual_array.noredundant_arr(:,3); % æ¥æ”¶å¤©çº¿ä½ç½®é›†åˆ
+    tx_pos_set = virtual_array.noredundant_arr(:,4); % å‘å°„å¤©çº¿ä½ç½®é›†åˆ
     for rx_id = 1 :length(virtual_array.noredundant_arr(rx_pos_set))
         rx_arr = rx_pos_set(rx_id);
-        sig_idx0 = [sig_idx0, find(cfgOut.PosRX_BOARD_ID == rx_arr)]; % È·¶¨½ÓÊÕÌìÏßµÄĞòºÅ
+        sig_idx0 = [sig_idx0, find(cfgOut.PosRX_BOARD_ID == rx_arr)]; % ç¡®å®šæ¥æ”¶å¤©çº¿çš„åºå·
     end
     for tx_id = 1 :length(virtual_array.noredundant_arr(tx_pos_set))
         tx_arr = tx_pos_set(tx_id);
-        sig_idx1 = [sig_idx1, find(cfgOut.PosTX_Trans_ID == tx_arr)]; % È·¶¨·¢ÉäÌìÏßµÄË³ĞòĞòºÅ ²»ÊÇ°å×ÓÉÏÅÅÁĞ
+        sig_idx1 = [sig_idx1, find(cfgOut.PosTX_Trans_ID == tx_arr)]; % ç¡®å®šå‘å°„å¤©çº¿çš„é¡ºåºåºå· ä¸æ˜¯æ¿å­ä¸Šæ’åˆ—
     end
     cfgOut.sigSpaceIdx = [sig_space_idx0.'; sig_space_idx1.'];
     cfgOut.sigIdx = [sig_idx0; sig_idx1];
     
-    cfgOut.virtual_array = virtual_array; % ½«virtual_array²ÎÊı´æÈë¸üĞÂ
+    cfgOut.virtual_array = virtual_array; % å°†virtual_arrayå‚æ•°å­˜å…¥æ›´æ–°
     
-    cfgOut.arrdx = 0.5; % ¹éÒ»»¯ÕóÔª¼ä¾à
+    cfgOut.arrdx = 0.5; % å½’ä¸€åŒ–é˜µå…ƒé—´è·
     cfgOut.arrdy = 0.5; 
     
-    % ÏÂÃæµÄÊÇÎ´¿¼ÂÇ·¢ÉäË³ĞòÇ°µÄ°æ±¾
+    % ä¸‹é¢çš„æ˜¯æœªè€ƒè™‘å‘å°„é¡ºåºå‰çš„ç‰ˆæœ¬
 %     arrX = [];
 %     arrY = [];
 %     for id = 1 : cfgOut.numTx
-%        arrX = [arrX PosRX_X + PosTX_X(id)]; % MIMOÕóÔªÅÅÁĞ
+%        arrX = [arrX PosRX_X + PosTX_X(id)]; % MIMOé˜µå…ƒæ’åˆ—
 %        arrY = [arrY PosRX_Y + PosTX_Y(id)];
 %     end   
 %     cfgOut.array(1,:) = arrX;
 %     cfgOut.array(2,:) = arrY;
     
-    cfgOut.antennaPhase = zeros(1,cfgOut.numRx*cfgOut.numTx); % ³õÊ¼»¯ÏàÎ»[¿ÉÒÔ½áºÏ·ùÏàÎó²îĞ£×¼]
+    cfgOut.antennaPhase = zeros(1,cfgOut.numRx*cfgOut.numTx); % åˆå§‹åŒ–ç›¸ä½[å¯ä»¥ç»“åˆå¹…ç›¸è¯¯å·®æ ¡å‡†]
     
     
-    % ĞÅºÅ²ÎÊı
-    cfgOut.startFreq = 76.5e9; % ÆğÊ¼ÆµÂÊ
-    cfgOut.fs = 6874e3; % ADC²ÉÑùÆµÂÊ Hz 6874e3
-    cfgOut.Ramptime = 80e-6; % ¹¤×÷Ê±¼ä 80e-6
-    cfgOut.Idletime = 30e-6; % ¿ÕÏĞÊ±¼ä 30e-6
-    cfgOut.Slope = 46.397e12; % ChirpĞ±ÂÊ 46.397
-    cfgOut.validB = 1 / cfgOut.fs * cfgOut.ADCNum * cfgOut.Slope; % Êµ¼ÊÓĞĞ§´ø¿í
-    cfgOut.totalB = cfgOut.Ramptime * cfgOut.Slope; % ÍêÕû´ø¿í
-    cfgOut.Tc = cfgOut.Idletime + cfgOut.Ramptime; % µ¥ChirpÖÜÆÚ
-    cfgOut.ValidTc = 1 / cfgOut.fs * cfgOut.ADCNum; % µ¥ChirpÄÚADCÓĞĞ§²ÉÑùÊ±¼ä
-    cfgOut.fc = cfgOut.totalB / 2 + cfgOut.startFreq + 1 / cfgOut.fs * cfgOut.ADCNum; % ÔØÆµ Hz ºóÃæÁ½ÏîÎªÓĞĞ§µÄÆğÊ¼ÆµÂÊ 
+    % ä¿¡å·å‚æ•°
+    cfgOut.startFreq = 76.5e9; % èµ·å§‹é¢‘ç‡
+    cfgOut.fs = 6874e3; % ADCé‡‡æ ·é¢‘ç‡ Hz 6874e3
+    cfgOut.Ramptime = 80e-6; % å·¥ä½œæ—¶é—´ 80e-6
+    cfgOut.Idletime = 30e-6; % ç©ºé—²æ—¶é—´ 30e-6
+    cfgOut.Slope = 46.397e12; % Chirpæ–œç‡ 46.397
+    cfgOut.validB = 1 / cfgOut.fs * cfgOut.ADCNum * cfgOut.Slope; % å®é™…æœ‰æ•ˆå¸¦å®½
+    cfgOut.totalB = cfgOut.Ramptime * cfgOut.Slope; % å®Œæ•´å¸¦å®½
+    cfgOut.Tc = cfgOut.Idletime + cfgOut.Ramptime; % å•Chirpå‘¨æœŸ
+    cfgOut.ValidTc = 1 / cfgOut.fs * cfgOut.ADCNum; % å•Chirpå†…ADCæœ‰æ•ˆé‡‡æ ·æ—¶é—´
+    cfgOut.fc = cfgOut.totalB / 2 + cfgOut.startFreq + 1 / cfgOut.fs * cfgOut.ADCNum; % è½½é¢‘ Hz åé¢ä¸¤é¡¹ä¸ºæœ‰æ•ˆçš„èµ·å§‹é¢‘ç‡ 
     
-    % Ó²¼ş²ÎÊı
-    cfgOut.Pt = 12; % dbm ·¢Éä¹¦ÂÊ
-    cfgOut.Fn = 12; % ÔëÉùÏµÊı
-    cfgOut.Ls = 3;  % ÏµÍ³ËğºÄ
+    % ç¡¬ä»¶å‚æ•°
+    cfgOut.Pt = 12; % dbm å‘å°„åŠŸç‡
+    cfgOut.Fn = 12; % å™ªå£°ç³»æ•°
+    cfgOut.Ls = 3;  % ç³»ç»ŸæŸè€—
     
-%     cfgOut.Pa = 48; % dB ½ÓÊÕÁ´Â·ÔöÒæ
+%     cfgOut.Pa = 48; % dB æ¥æ”¶é“¾è·¯å¢ç›Š
     
 end

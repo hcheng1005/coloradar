@@ -1,53 +1,53 @@
 function [doaOut] = azimuthDOA(arrData, cfgDOA)
-    %% ±¾ÎÄ¼şÓÃÓÚ·½Î»Î¬¶ÈµÄDOA/AOA¹À¼Æ
+    %% æœ¬æ–‡ä»¶ç”¨äºæ–¹ä½ç»´åº¦çš„DOA/AOAä¼°è®¡
     %% By Xuliang, 20230417
-    %% arrData: ÕóÁĞÊı¾İ ´«Èë·½Î»Î¬ÕóÁĞ*1
-    %% cfgDOA: ²ÎÊıÅäÖÃ
+    %% arrData: é˜µåˆ—æ•°æ® ä¼ å…¥æ–¹ä½ç»´é˜µåˆ—*1
+    %% cfgDOA: å‚æ•°é…ç½®
 
-    addpath('./DOA_FUNC'); % ¼ÓÈëDOAº¯ÊıÂ·¾¶
-    doaMethod = cfgDOA.AziMethod; % ¶ÁÈ¡doa¹À¼Æ·½·¨ Ã¿ÖÖ·½·¨·µ»Ø¿Õ¼äÆ×
+    addpath('./DOA_FUNC'); % åŠ å…¥DOAå‡½æ•°è·¯å¾„
+    doaMethod = cfgDOA.AziMethod; % è¯»å–doaä¼°è®¡æ–¹æ³• æ¯ç§æ–¹æ³•è¿”å›ç©ºé—´è°±
     doaOut = {};
     if strcmp(doaMethod,'FFT')
-        P = cfgDOA.AzisigNum; % P ÎªĞÅÔ´ÊıÄ¿
+        P = cfgDOA.AzisigNum; % P ä¸ºä¿¡æºæ•°ç›®
         [Pout] = DOA_FFT(arrData, cfgDOA);
         if sum(abs(Pout)) == 0
-            doaOut.spectrum = Pout; % ¿Õ¼äÆ×
+            doaOut.spectrum = Pout; % ç©ºé—´è°±
         else
-            [peakVal, peakIdx] = findpeaks(abs(Pout)); % ËÑË÷¿Õ¼äÆ×·å
-            [sortVal, sortIdx] = sort(peakVal); % ¶Ô·åÖµ½øĞĞÅÅĞò ¼¶ÁªÀ×´ïÖĞ´æÔÚ3ÁĞÔªËØÈ«Îª0 ÕâÖÖÇé¿ö²»´æÔÚ·åÖµ
-            ampVal = sortVal(end-P+1:end); % Ñ¡Ôñ×î´óÖµ
-            Idx = peakIdx(sortIdx(end)); % Ñ¡Ôñ×î´óÖµ
+            [peakVal, peakIdx] = findpeaks(abs(Pout)); % æœç´¢ç©ºé—´è°±å³°
+            [sortVal, sortIdx] = sort(peakVal); % å¯¹å³°å€¼è¿›è¡Œæ’åº çº§è”é›·è¾¾ä¸­å­˜åœ¨3åˆ—å…ƒç´ å…¨ä¸º0 è¿™ç§æƒ…å†µä¸å­˜åœ¨å³°å€¼
+            ampVal = sortVal(end-P+1:end); % é€‰æ‹©æœ€å¤§å€¼
+            Idx = peakIdx(sortIdx(end)); % é€‰æ‹©æœ€å¤§å€¼
             
-            freqGrids = linspace(-pi, pi, cfgDOA.FFTNum); % ÆµÓòÍø¸ñ
+            freqGrids = linspace(-pi, pi, cfgDOA.FFTNum); % é¢‘åŸŸç½‘æ ¼
             freq = freqGrids(Idx);
-            angleVal = asind(freq / 2 / pi * 2); % ½Ç¶ÈÖµ
+            angleVal = asind(freq / 2 / pi * 2); % è§’åº¦å€¼
             
-            doaOut.peakVal = ampVal; % ·åÖµ
-            doaOut.angleVal = angleVal; % ½Ç¶ÈÖµ
-            doaOut.angleIdx = Idx; % Æ×·åË÷Òı
-            doaOut.spectrum = Pout; % ¿Õ¼äÆ×
+            doaOut.peakVal = ampVal; % å³°å€¼
+            doaOut.angleVal = angleVal; % è§’åº¦å€¼
+            doaOut.angleIdx = Idx; % è°±å³°ç´¢å¼•
+            doaOut.spectrum = Pout; % ç©ºé—´è°±
         end
         
     elseif strcmp(doaMethod,'MUSIC')
-        P = cfgDOA.AzisigNum; % P ÎªĞÅÔ´ÊıÄ¿
-        thetaGrids = cfgDOA.thetaGrids; % Íø¸ñ»®·Ö
+        P = cfgDOA.AzisigNum; % P ä¸ºä¿¡æºæ•°ç›®
+        thetaGrids = cfgDOA.thetaGrids; % ç½‘æ ¼åˆ’åˆ†
         
-        [Pout] = DOA_MUSIC(arrData, P, thetaGrids); % MUSICµÄarrDataÊı¾İÎ¬¶È¿ÉÒÔÊÇM*snap MÕóÔª snap¿ìÅÄ
+        [Pout] = DOA_MUSIC(arrData, P, thetaGrids); % MUSICçš„arrDataæ•°æ®ç»´åº¦å¯ä»¥æ˜¯M*snap Mé˜µå…ƒ snapå¿«æ‹
         
         if sum(abs(Pout)) == 0
-            doaOut.spectrum = Pout; % ¿Õ¼äÆ×
+            doaOut.spectrum = Pout; % ç©ºé—´è°±
         else
-            [peakVal, peakIdx] = findpeaks(abs(Pout)); % ËÑË÷¿Õ¼äÆ×·å
-            [sortVal, sortIdx] = sort(peakVal); % ¶Ô·åÖµ½øĞĞÅÅĞò
+            [peakVal, peakIdx] = findpeaks(abs(Pout)); % æœç´¢ç©ºé—´è°±å³°
+            [sortVal, sortIdx] = sort(peakVal); % å¯¹å³°å€¼è¿›è¡Œæ’åº
 
-            ampVal = sortVal(end-P+1:end); % Ñ¡Ôñ×î´óÖµ
-            Idx = peakIdx(sortIdx(end-P+1:end)); % Ñ¡Ôñ×î´óÖµ
-            angleVal = thetaGrids(Idx); % ½Ç¶ÈÖµ
+            ampVal = sortVal(end-P+1:end); % é€‰æ‹©æœ€å¤§å€¼
+            Idx = peakIdx(sortIdx(end-P+1:end)); % é€‰æ‹©æœ€å¤§å€¼
+            angleVal = thetaGrids(Idx); % è§’åº¦å€¼
             
-            doaOut.peakVal = ampVal; % ·åÖµ
-            doaOut.angleVal = angleVal; % ½Ç¶ÈÖµ
-            doaOut.angleIdx = Idx; % Æ×·åË÷Òı
-            doaOut.spectrum = Pout; % ¿Õ¼äÆ×
+            doaOut.peakVal = ampVal; % å³°å€¼
+            doaOut.angleVal = angleVal; % è§’åº¦å€¼
+            doaOut.angleIdx = Idx; % è°±å³°ç´¢å¼•
+            doaOut.spectrum = Pout; % ç©ºé—´è°±
         end
     end
     

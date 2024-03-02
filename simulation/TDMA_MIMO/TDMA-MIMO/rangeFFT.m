@@ -1,5 +1,5 @@
 function fftOut = rangeFFT(adcData, IQFlag)
-    %% ±¾ÎÄ¼şÓÃÓÚÊµÏÖ¾àÀëÎ¬FFT
+    %% æœ¬æ–‡ä»¶ç”¨äºå®ç°è·ç¦»ç»´FFT
     %% By Xuliang,20230412
     
     ADCNum = size(adcData, 1);
@@ -8,20 +8,20 @@ function fftOut = rangeFFT(adcData, IQFlag)
     fftOut = {};
     
     if IQFlag
-        % ¾àÀëÎ¬FFT
-        rangeWin = hanning(ADCNum); % ¾àÀë¼Ó´°
-        rangeWin3D = repmat(rangeWin, 1, ChirpNum, arrNum); % À©³äÓërangeDataÊı¾İÒ»ÖÂ
-        rangeData = adcData .* rangeWin3D ; % ¾àÀëÎ¬¼Ó´°
-        rangeFFTOut = fft(rangeData, [], 1) * 2 * 2 / ADCNum; % ¶Ô¾àÀëÎ¬×öFFT¡¾FFT²¹³¥+ººÄş´°²¹³¥¡¿ 
+        % è·ç¦»ç»´FFT
+        rangeWin = hanning(ADCNum); % è·ç¦»åŠ çª—
+        rangeWin3D = repmat(rangeWin, 1, ChirpNum, arrNum); % æ‰©å……ä¸rangeDataæ•°æ®ä¸€è‡´
+        rangeData = adcData .* rangeWin3D ; % è·ç¦»ç»´åŠ çª—
+        rangeFFTOut = fft(rangeData, [], 1) * 2 * 2 / ADCNum; % å¯¹è·ç¦»ç»´åšFFTã€FFTè¡¥å¿+æ±‰å®çª—è¡¥å¿ã€‘ 
     else
-        % ²ÉÑùIÂ·Ê±ĞèÒª×¢ÒâÄ¿±ê¾àÀë²»ÄÜ³¬³ö×î´óÔ¼ÊøÄ¿±ê¾àÀë ·ñÔò»á³öÏÖ¾àÀëÄ£ºı
-        % µ¥Â·ĞÅºÅĞèÒªÅ×µôÒ»°ëĞÅºÅ
+        % é‡‡æ ·Iè·¯æ—¶éœ€è¦æ³¨æ„ç›®æ ‡è·ç¦»ä¸èƒ½è¶…å‡ºæœ€å¤§çº¦æŸç›®æ ‡è·ç¦» å¦åˆ™ä¼šå‡ºç°è·ç¦»æ¨¡ç³Š
+        % å•è·¯ä¿¡å·éœ€è¦æŠ›æ‰ä¸€åŠä¿¡å·
 
-        % ¾àÀëÎ¬FFT
-        rangeWin = hanning(ADCNum); % ººÄş´°
-        rangeWin3D = repmat(rangeWin, 1, ChirpNum, arrNum); % À©³äÓërangeDataÊı¾İÒ»ÖÂ
-        rangeData = adcData .* rangeWin3D ; % ¾àÀëÎ¬¼Ó´°
-        rangeFFTOut = fft(rangeData, [], 1) * 2 * 2 / ADCNum; % ¶Ô¾àÀëÎ¬×öFFT¡¾FFT²¹³¥+ººÄş´°²¹³¥¡¿
+        % è·ç¦»ç»´FFT
+        rangeWin = hanning(ADCNum); % æ±‰å®çª—
+        rangeWin3D = repmat(rangeWin, 1, ChirpNum, arrNum); % æ‰©å……ä¸rangeDataæ•°æ®ä¸€è‡´
+        rangeData = adcData .* rangeWin3D ; % è·ç¦»ç»´åŠ çª—
+        rangeFFTOut = fft(rangeData, [], 1) * 2 * 2 / ADCNum; % å¯¹è·ç¦»ç»´åšFFTã€FFTè¡¥å¿+æ±‰å®çª—è¡¥å¿ã€‘
         rangeFFTOut = rangeFFTOut(1:end/2, :, :);
     end
     fftOut.rangeFFT = rangeFFTOut;

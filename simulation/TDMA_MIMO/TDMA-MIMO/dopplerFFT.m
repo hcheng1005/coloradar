@@ -1,15 +1,15 @@
 function fftOut = dopplerFFT(rangeFFTOut)
-    %% ±¾ÎÄ¼şÓÃÓÚÊµÏÖ¶àÆÕÀÕÎ¬FFT
+    %% æœ¬æ–‡ä»¶ç”¨äºå®ç°å¤šæ™®å‹’ç»´FFT
     %% By Xuliang,20230412
     
     ADCNum = size(rangeFFTOut, 1);
     ChirpNum = size(rangeFFTOut, 2);
     arrNum = size(rangeFFTOut,3);
     fftOut = {};
-    % ¶àÆÕÀÕÎ¬FFT 
-    dopplerWin = hanning(ChirpNum)'; % ººÄş´°
-    dopplerWin3D = repmat(dopplerWin, ADCNum, 1, arrNum); % À©³äÓëdopplerDataÊı¾İÒ»ÖÂ
-    dopplerData = rangeFFTOut .* dopplerWin3D; % ¶àÆÕÀÕ¼Ó´°
-    dopplerFFTOut = fftshift(fft(dopplerData, [], 2),2) * 2 * 2 / ChirpNum; % ¶Ô¶àÆÕÀÕÎ¬×öFFT¡¾FFT²¹³¥+ººÄş´°²¹³¥¡¿ 
+    % å¤šæ™®å‹’ç»´FFT 
+    dopplerWin = hanning(ChirpNum)'; % æ±‰å®çª—
+    dopplerWin3D = repmat(dopplerWin, ADCNum, 1, arrNum); % æ‰©å……ä¸dopplerDataæ•°æ®ä¸€è‡´
+    dopplerData = rangeFFTOut .* dopplerWin3D; % å¤šæ™®å‹’åŠ çª—
+    dopplerFFTOut = fftshift(fft(dopplerData, [], 2),2) * 2 * 2 / ChirpNum; % å¯¹å¤šæ™®å‹’ç»´åšFFTã€FFTè¡¥å¿+æ±‰å®çª—è¡¥å¿ã€‘ 
     fftOut.dopplerFFT = dopplerFFTOut;
 end

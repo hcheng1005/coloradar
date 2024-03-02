@@ -1,64 +1,64 @@
-%% ±¾ÎÄ¼şÓÃÓÚ²âÊÔRange-Azimuth-DopplerÁ÷³ÌÏÂµÄĞÅºÅ´¦ÀíÕ»
+%% æœ¬æ–‡ä»¶ç”¨äºæµ‹è¯•Range-Azimuth-Doppleræµç¨‹ä¸‹çš„ä¿¡å·å¤„ç†æ ˆ
 %% By Xuliang,20230414
 clc;clear;close all;
 
-dataPath = './dataset/adc_raw_dat.mat'; % ±£´æÎÄ¼şÂ·¾¶
-ShowIQ = 1; % ÊÇ·ñÏÔÊ¾IQĞÅºÅ
-ShowRange = 1; % ÊÇ·ñÏÔÊ¾RangePorfile
-ShowRA = 1; % ÊÇ·ñÏÔÊ¾RAM
-ShowRD = 1; % ÊÇ·ñÏÔÊ¾RDM
-ShowCFAR = 1; % ÊÇ·ñÏÔÊ¾CFAR½á¹û
-ShowPeak = 1; % ÊÇ·ñÏÔÊ¾¾ÛºÏ·åÖµ½á¹û
-IQFlag = 1; % ÊÇ·ñÑ¡ÔñIQÂ·ĞÅºÅ 0-µ¥Â· 1-Ë«Â·
-saveFlag = 0; % ÊÇ·ñ±£´æÎÄ¼ş
+dataPath = './dataset/adc_raw_dat.mat'; % ä¿å­˜æ–‡ä»¶è·¯å¾„
+ShowIQ = 1; % æ˜¯å¦æ˜¾ç¤ºIQä¿¡å·
+ShowRange = 1; % æ˜¯å¦æ˜¾ç¤ºRangePorfile
+ShowRA = 1; % æ˜¯å¦æ˜¾ç¤ºRAM
+ShowRD = 1; % æ˜¯å¦æ˜¾ç¤ºRDM
+ShowCFAR = 1; % æ˜¯å¦æ˜¾ç¤ºCFARç»“æœ
+ShowPeak = 1; % æ˜¯å¦æ˜¾ç¤ºèšåˆå³°å€¼ç»“æœ
+IQFlag = 1; % æ˜¯å¦é€‰æ‹©IQè·¯ä¿¡å· 0-å•è·¯ 1-åŒè·¯
+saveFlag = 0; % æ˜¯å¦ä¿å­˜æ–‡ä»¶
 
-%% Ä¿±êºÍÏµÍ³²ÎÊı¸üĞÂ
-disp(strcat(['=====','Ë¢ĞÂÄ¿±êºÍÏµÍ³²ÎÊı','====='])); % µ¥°åÀ×´ïÄ£Ê½
-tarOut = ConfigureTarget;     % Éú³ÉÄ¿±êĞÅÏ¢
-cfgOut = ConfigureParameter;  % Éú³ÉºÁÃ×²¨À×´ïÏµÍ³²ÎÊı
+%% ç›®æ ‡å’Œç³»ç»Ÿå‚æ•°æ›´æ–°
+disp(strcat(['=====','åˆ·æ–°ç›®æ ‡å’Œç³»ç»Ÿå‚æ•°','====='])); % å•æ¿é›·è¾¾æ¨¡å¼
+tarOut = ConfigureTarget;     % ç”Ÿæˆç›®æ ‡ä¿¡æ¯
+cfgOut = ConfigureParameter;  % ç”Ÿæˆæ¯«ç±³æ³¢é›·è¾¾ç³»ç»Ÿå‚æ•°
 
-%% À×´ï²É¼¯Êı¾İ
-disp(strcat(['=====','À×´ï½øÈë¹¤×÷×´Ì¬','=====']));     
-[RawData] = GenerateAdcData(tarOut, cfgOut, IQFlag, saveFlag, dataPath); % ¿ªÊ¼Ä£Äâ²ÉÊı¾İ
+%% é›·è¾¾é‡‡é›†æ•°æ®
+disp(strcat(['=====','é›·è¾¾è¿›å…¥å·¥ä½œçŠ¶æ€','=====']));     
+[RawData] = GenerateAdcData(tarOut, cfgOut, IQFlag, saveFlag, dataPath); % å¼€å§‹æ¨¡æ‹Ÿé‡‡æ•°æ®
 
-%% ÎïÀí²ÎÊı¸üĞÂ
-c = physconst('LightSpeed'); % ¹âËÙ
-fc = cfgOut.fc; % ÔØÆµ Hz
-lambda = c / fc; % ²¨³¤
+%% ç‰©ç†å‚æ•°æ›´æ–°
+c = physconst('LightSpeed'); % å…‰é€Ÿ
+fc = cfgOut.fc; % è½½é¢‘ Hz
+lambda = c / fc; % æ³¢é•¿
 
-ADCNum = cfgOut.ADCNum; % ADC²ÉÑùÊıÄ¿
-ChirpNum = cfgOut.ChirpNum; % Ã¿Ö¡·¢ÉäChirpÊıÄ¿
+ADCNum = cfgOut.ADCNum; % ADCé‡‡æ ·æ•°ç›®
+ChirpNum = cfgOut.ChirpNum; % æ¯å¸§å‘å°„Chirpæ•°ç›®
 
-numTx = cfgOut.numTx; % ·¢ÉäÌìÏßÊıÄ¿
-numRx = cfgOut.numRx; % ½ÓÊÕÌìÏßÊıÄ¿
-% arr = cfgOut.array; % ÕóÔªÅÅÁĞ[³õ½×°æ±¾µÄÕóÁĞ]
-virtual_array = cfgOut.virtual_array; % ĞéÄâÕóÁĞstruct
+numTx = cfgOut.numTx; % å‘å°„å¤©çº¿æ•°ç›®
+numRx = cfgOut.numRx; % æ¥æ”¶å¤©çº¿æ•°ç›®
+% arr = cfgOut.array; % é˜µå…ƒæ’åˆ—[åˆé˜¶ç‰ˆæœ¬çš„é˜µåˆ—]
+virtual_array = cfgOut.virtual_array; % è™šæ‹Ÿé˜µåˆ—struct
 arr = virtual_array.virtual_arr;
 
-arrNum = numTx * numRx; % ÕóÔªÊıÄ¿
-arrDx = cfgOut.arrdx; % ·½Î»ÏòÕóÔª¼ä¾à
-arrDy = cfgOut.arrdx; % ¸©ÑöÏòÕóÔª¼ä¾à
+arrNum = numTx * numRx; % é˜µå…ƒæ•°ç›®
+arrDx = cfgOut.arrdx; % æ–¹ä½å‘é˜µå…ƒé—´è·
+arrDy = cfgOut.arrdx; % ä¿¯ä»°å‘é˜µå…ƒé—´è·
 
-validB = cfgOut.validB; % ÓĞĞ§´ø¿í
-range_res = c / (2 * validB); % ¾àÀë·Ö±æÂÊ
+validB = cfgOut.validB; % æœ‰æ•ˆå¸¦å®½
+range_res = c / (2 * validB); % è·ç¦»åˆ†è¾¨ç‡
 
 TF = cfgOut.Tc * (numTx * ChirpNum);
-doppler_res = lambda / (2 * TF); % ¶àÆÕÀÕ·Ö±æÂÊ
-Frame = cfgOut.Frame; % Ö¡Êı
+doppler_res = lambda / (2 * TF); % å¤šæ™®å‹’åˆ†è¾¨ç‡
+Frame = cfgOut.Frame; % å¸§æ•°
 
-% ¾àÀëË÷ÒıºÍËÙ¶ÈË÷Òı
+% è·ç¦»ç´¢å¼•å’Œé€Ÿåº¦ç´¢å¼•
 if IQFlag
     velocityIndex = [-ChirpNum / 2 : 1 : ChirpNum / 2 - 1] * doppler_res;
     rangeIndex = (0 : ADCNum - 1) * range_res;
 else
     velocityIndex = [-ChirpNum / 2 : 1 : ChirpNum / 2 - 1] * doppler_res;
     rangeIndex = (-ADCNum / 2 : 1 : ADCNum / 2 - 1) * range_res;
-    rangeIndex = rangeIndex(end/2+1:end);  % È¡ºóÃæÒ»°ë
+    rangeIndex = rangeIndex(end/2+1:end);  % å–åé¢ä¸€åŠ
 end
 
-%% IQÆ½ºâ·ÖÎö
+%% IQå¹³è¡¡åˆ†æ
 if ShowIQ
-    if IQFlag % IQÁ½Â·ĞÅºÅ
+    if IQFlag % IQä¸¤è·¯ä¿¡å·
         figure(1);
         set(gcf,'unit','centimeters','position',[10,12,10,10])
         plot(1:ADCNum, real(RawData(:,1,1))); hold on;
@@ -73,14 +73,14 @@ if ShowIQ
     end
 end
 RawData = reshape(RawData, ADCNum, ChirpNum, [], arrNum);
-disp(strcat(['À×´ïĞÅºÅµÄÎ¬¶ÈÎª£º',num2str(size(RawData))]));
+disp(strcat(['é›·è¾¾ä¿¡å·çš„ç»´åº¦ä¸ºï¼š',num2str(size(RawData))]));
 
 
 for frame_id = 1 : Frame
     adcData = squeeze(RawData(:, :, frame_id, :));
     
-    %% ¾àÀëÎ¬FFT
-    disp(strcat(['=====','Range-ProfileÉú³É','====='])); 
+    %% è·ç¦»ç»´FFT
+    disp(strcat(['=====','Range-Profileç”Ÿæˆ','====='])); 
     tic
     fftOut1 = rangeFFT(adcData, IQFlag);
     toc
@@ -91,30 +91,30 @@ for frame_id = 1 : Frame
         set(gcf,'unit','centimeters','position',[20,12,10,10])
         plot(rangeIndex, db(rangeFFTOut(:,1,1))); 
         xlabel('Range(m)');ylabel('Amplitude(dB)'); 
-        title(strcat(['µÚ',num2str(frame_id),'Ö¡-Ä¿±ê¾àÀë·Ö²¼']));grid minor;  
+        title(strcat(['ç¬¬',num2str(frame_id),'å¸§-ç›®æ ‡è·ç¦»åˆ†å¸ƒ']));grid minor;  
         pause(0.1);
     end
     
-    %% ¾àÀë-·½Î»Í¼Éú³É
-    cfgDOA.FFTNum = 180; % FFTµãÊı
-    cfgDOA.AziMethod = 'MUSIC'; % ÓÉÓÚ±¾Ì×¼Ü¹¹Ä¿µÄÊÇÀûÓÃ¶à¿ìÅÄĞÅÏ¢ ½öÖ§³Ö³¬·ÖËã·¨
-    cfgDOA.AzisigNum = 1; % Ô¼ÊøÃ¿¸öCELLÉÏµÄĞÅÔ´ÊıÄ¿
-    cfgDOA.thetaGrids = linspace(-90, 90, cfgDOA.FFTNum); % ¿Õ¼äÍø¸ñ
+    %% è·ç¦»-æ–¹ä½å›¾ç”Ÿæˆ
+    cfgDOA.FFTNum = 180; % FFTç‚¹æ•°
+    cfgDOA.AziMethod = 'MUSIC'; % ç”±äºæœ¬å¥—æ¶æ„ç›®çš„æ˜¯åˆ©ç”¨å¤šå¿«æ‹ä¿¡æ¯ ä»…æ”¯æŒè¶…åˆ†ç®—æ³•
+    cfgDOA.AzisigNum = 1; % çº¦æŸæ¯ä¸ªCELLä¸Šçš„ä¿¡æºæ•°ç›®
+    cfgDOA.thetaGrids = linspace(-90, 90, cfgDOA.FFTNum); % ç©ºé—´ç½‘æ ¼
     
-    disp(strcat(['=====','Range-Azimuth-MapÉú³É','====='])); 
+    disp(strcat(['=====','Range-Azimuth-Mapç”Ÿæˆ','====='])); 
     tic
     RAM = GenerateRAM(rangeFFTOut, cfgOut, cfgDOA);
     toc
     if ShowRA
         figure(3);
         set(gcf,'unit','centimeters','position',[30,12,10,10])
-        [theta,rho] = meshgrid(cfgDOA.thetaGrids, rangeIndex); % Íø¸ñ»¯
-        xaxis = rho .* cosd(theta); % ºá×ø±ê
-        yaxis = rho .* sind(theta); % ×İ×ø±ê
+        [theta,rho] = meshgrid(cfgDOA.thetaGrids, rangeIndex); % ç½‘æ ¼åŒ–
+        xaxis = rho .* cosd(theta); % æ¨ªåæ ‡
+        yaxis = rho .* sind(theta); % çºµåæ ‡
         surf(yaxis,xaxis,db(abs(RAM)),'EdgeColor','none'); 
         view(2);colormap('jet');
         xlabel('Range(m)','fontsize',15,'fontname','Times New Roman');ylabel('Range(m)','fontsize',15,'fontname','Times New Roman');grid on; axis xy
-        title(strcat(['µÚ',num2str(frame_id),'Ö¡-¾àÀë·½Î»Æ×Í¼']));grid minor;  
+        title(strcat(['ç¬¬',num2str(frame_id),'å¸§-è·ç¦»æ–¹ä½è°±å›¾']));grid minor;  
         set(gca,'GridLineStyle','- -');
         set(gca,'GridAlpha',0.2);
         set(gca,'LineWidth',1.5);
@@ -123,37 +123,37 @@ for frame_id = 1 : Frame
         colorbar;
     end
     
-    %% CFAR¼ì²â
-    disp(strcat(['=====','ºãĞé¾¯¼ì²â','====='])); 
-    Pfa = 1e-2; % Ğé¾¯¸ÅÂÊ
-    TestCells = [8, 8]; % ²Î¿¼´Ó
-    GuardCells = [4, 4]; % ±£»¤´°
+    %% CFARæ£€æµ‹
+    disp(strcat(['=====','æ’è™šè­¦æ£€æµ‹','====='])); 
+    Pfa = 1e-2; % è™šè­¦æ¦‚ç‡
+    TestCells = [8, 8]; % å‚è€ƒä»
+    GuardCells = [4, 4]; % ä¿æŠ¤çª—
     
     tic
     [cfarOut] = CFAR_2D(abs(RAM).^2, Pfa, TestCells, GuardCells);
     toc
-    cfarMap = cfarOut.cfarMap; % ¼ì²âµãÊä³ö
-    noiseOut = cfarOut.noiseOut; % ÔëÉùÊä³ö
-    snrOut = cfarOut.snrOut; % ĞÅÔë±ÈÊä³ö RAMµÄĞÅÔë±È²»ÄÜ±íÊ¾ÕæÊµĞÅÔë±È(²¿·Ö¿ÕÆ×·½·¨ÖĞ)
+    cfarMap = cfarOut.cfarMap; % æ£€æµ‹ç‚¹è¾“å‡º
+    noiseOut = cfarOut.noiseOut; % å™ªå£°è¾“å‡º
+    snrOut = cfarOut.snrOut; % ä¿¡å™ªæ¯”è¾“å‡º RAMçš„ä¿¡å™ªæ¯”ä¸èƒ½è¡¨ç¤ºçœŸå®ä¿¡å™ªæ¯”(éƒ¨åˆ†ç©ºè°±æ–¹æ³•ä¸­)
     
     if ShowCFAR
         figure(4);
         set(gcf,'unit','centimeters','position',[30,0,10,10]);
         imagesc(cfgDOA.thetaGrids, rangeIndex, cfarMap);
         ylabel('Range(m)');xlabel('Angle(deg)'); colormap('jet');
-        title(strcat(['µÚ',num2str(frame_id),'Ö¡Ä¿±ê-CFAR¼ì²â½á¹û']));
+        title(strcat(['ç¬¬',num2str(frame_id),'å¸§ç›®æ ‡-CFARæ£€æµ‹ç»“æœ']));
         grid minor;axis xy;
         pause(0.1);
     end
     
-    %% ·åÖµ¾ÛºÏ-»ñÈ¡µãÄ¿±ê
-    disp(strcat(['=====','·åÖµ¾ÛºÏ','====='])); 
+    %% å³°å€¼èšåˆ-è·å–ç‚¹ç›®æ ‡
+    disp(strcat(['=====','å³°å€¼èšåˆ','====='])); 
     [range_idx, doppler_idx] = find(cfarMap);
-    cfar_out_idx = [range_idx doppler_idx]; % »ñÈ¡CFARÊä³ö½á¹ûµÄĞĞÁĞË÷Òı
+    cfar_out_idx = [range_idx doppler_idx]; % è·å–CFARè¾“å‡ºç»“æœçš„è¡Œåˆ—ç´¢å¼•
     tic
     [rd_peak_list, rd_peak] = peakFocus(db(RAM), cfar_out_idx);
     toc
-    peakMap = zeros(size(cfarMap)); % ·åÖµ¾ÛºÏ½á¹û¾ØÕó
+    peakMap = zeros(size(cfarMap)); % å³°å€¼èšåˆç»“æœçŸ©é˜µ
     for peak_idx = 1 :size(rd_peak_list, 2)
         peakMap(rd_peak_list(1,peak_idx), rd_peak_list(2,peak_idx)) = 1;
     end
@@ -163,27 +163,27 @@ for frame_id = 1 : Frame
         set(gcf,'unit','centimeters','position',[40,12,10,10])
         imagesc(cfgDOA.thetaGrids, rangeIndex, peakMap);
         ylabel('Range(m)');xlabel('Angle(deg)'); colormap('jet');
-        title(strcat(['µÚ',num2str(frame_id),'Ö¡Ä¿±ê-·åÖµ¾ÛºÏ½á¹û']));
+        title(strcat(['ç¬¬',num2str(frame_id),'å¸§ç›®æ ‡-å³°å€¼èšåˆç»“æœ']));
         grid minor;axis xy;xlim([-60 60]);
         pause(0.1);
     end
     
-    % ÕâÀïĞèÒª¿¼ÂÇCFAR¼ì²âµÄÄ¿±êµã[´æ´¢¼ì²âµ½µÄÄ¿±ê¾àÀëË÷Òı¡¢·½Î»Ë÷Òı]
+    % è¿™é‡Œéœ€è¦è€ƒè™‘CFARæ£€æµ‹çš„ç›®æ ‡ç‚¹[å­˜å‚¨æ£€æµ‹åˆ°çš„ç›®æ ‡è·ç¦»ç´¢å¼•ã€æ–¹ä½ç´¢å¼•]
     targetPerFrame = {}; 
-    targetPerFrame.rangeSet = []; % ´æ´¢¾àÀë
-    targetPerFrame.velocitySet = []; % ´æ´¢ËÙ¶È[ÎªÏÂÃæ³õÊ¼»¯]
-    targetPerFrame.azimuthSet = []; % ´æ´¢·½Î»
+    targetPerFrame.rangeSet = []; % å­˜å‚¨è·ç¦»
+    targetPerFrame.velocitySet = []; % å­˜å‚¨é€Ÿåº¦[ä¸ºä¸‹é¢åˆå§‹åŒ–]
+    targetPerFrame.azimuthSet = []; % å­˜å‚¨æ–¹ä½
     
-    [cfar_rid, cfar_cid] = find(cfarMap); % rid±íÊ¾¾àÀëµ¥ÔªË÷Òı cid±íÊ¾½Ç¶Èµ¥ÔªË÷Òı
+    [cfar_rid, cfar_cid] = find(cfarMap); % ridè¡¨ç¤ºè·ç¦»å•å…ƒç´¢å¼• cidè¡¨ç¤ºè§’åº¦å•å…ƒç´¢å¼•
     targetPerFrame.rangeSet = [targetPerFrame.rangeSet, rangeIndex(cfar_rid)];
     targetPerFrame.azimuthSet = [targetPerFrame.azimuthSet, cfgDOA.thetaGrids(cfar_cid)];
     
-    %% ¶àÆÕÀÕFFT¹À¼Æ[ºÍ´«Í³Á÷³Ì²»Ò»Ñù£¬Õâ¸öµØ·½ĞèÒªÊ¹ÓÃ»º´æÊı¾İrangeFFT]
-    fftOut2 = dopplerFFT(rangeFFTOut); % »º´æÊı¾İ´óĞ¡Îª256*128*12
-    dopplerFFTOut = fftOut2.dopplerFFT; % »ñÈ¡¶àÆÕÀÕÎ¬FFTÊı¾İ 
+    %% å¤šæ™®å‹’FFTä¼°è®¡[å’Œä¼ ç»Ÿæµç¨‹ä¸ä¸€æ ·ï¼Œè¿™ä¸ªåœ°æ–¹éœ€è¦ä½¿ç”¨ç¼“å­˜æ•°æ®rangeFFT]
+    fftOut2 = dopplerFFT(rangeFFTOut); % ç¼“å­˜æ•°æ®å¤§å°ä¸º256*128*12
+    dopplerFFTOut = fftOut2.dopplerFFT; % è·å–å¤šæ™®å‹’ç»´FFTæ•°æ® 
     
-    %% ·ÇÏà¸É»ıÀÛ
-    disp(strcat(['=====','·ÇÏà¸É»ıÀÛ','====='])); 
+    %% éç›¸å¹²ç§¯ç´¯
+    disp(strcat(['=====','éç›¸å¹²ç§¯ç´¯','====='])); 
     RDM = dopplerFFTOut;
     tic
     [accumulateRD] = incoherent_accumulation(RDM);
@@ -194,15 +194,15 @@ for frame_id = 1 : Frame
         set(gcf,'unit','centimeters','position',[20,0,10,10])
         imagesc(rangeIndex, velocityIndex, db(dopplerFFTOut(:,:,1).'));
         xlabel('Range(m)');ylabel('Velocity(m/s)'); colormap('jet');
-        title(strcat(['µÚ',num2str(frame_id),'Ö¡Ä¿±ê-¾àÀë¶àÆÕÀÕ·Ö²¼']));
+        title(strcat(['ç¬¬',num2str(frame_id),'å¸§ç›®æ ‡-è·ç¦»å¤šæ™®å‹’åˆ†å¸ƒ']));
         grid minor; axis xy;
         pause(0.1);
     end
     
-    for tarRangeIdx = 1 : length(targetPerFrame.rangeSet) % ±éÀú¼ì²âµ½µÄ¾àÀëµ¥Ôª ËÑË÷Æ×·å¹À¼ÆËÙ¶È
-        [velVal, velIdx] = findpeaks(accumulateRD(cfar_rid(tarRangeIdx),:)); % ËÑË÷ËÙ¶ÈÆ×·å
-        [sortVal, sortIdx] = sort(velVal); % ¶Ô·åÖµ½øĞĞÅÅĞò
-        Idx = velIdx(sortIdx(end)); % Ñ¡Ôñ×î´óÖµ
+    for tarRangeIdx = 1 : length(targetPerFrame.rangeSet) % éå†æ£€æµ‹åˆ°çš„è·ç¦»å•å…ƒ æœç´¢è°±å³°ä¼°è®¡é€Ÿåº¦
+        [velVal, velIdx] = findpeaks(accumulateRD(cfar_rid(tarRangeIdx),:)); % æœç´¢é€Ÿåº¦è°±å³°
+        [sortVal, sortIdx] = sort(velVal); % å¯¹å³°å€¼è¿›è¡Œæ’åº
+        Idx = velIdx(sortIdx(end)); % é€‰æ‹©æœ€å¤§å€¼
         targetPerFrame.velocitySet = [targetPerFrame.velocitySet, velocityIndex(Idx)];
     end
     

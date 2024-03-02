@@ -1,81 +1,81 @@
 function [signal] = GenerateSigI(tarOut, cfgOut)
-    %% ±¾ÎÄ¼şÓÃÓÚµ¥Â·ADCĞÅºÅ
+    %% æœ¬æ–‡ä»¶ç”¨äºå•è·¯ADCä¿¡å·
     %% By Xuliang, 20230411
-    tarNum = tarOut.nums; % Ä¿±êÊıÄ¿
-    numTx = cfgOut.numTx; % ·¢ÉäÌìÏßÊıÄ¿
-    numRx = cfgOut.numRx; % ½ÓÊÕÌìÏßÊıÄ¿
+    tarNum = tarOut.nums; % ç›®æ ‡æ•°ç›®
+    numTx = cfgOut.numTx; % å‘å°„å¤©çº¿æ•°ç›®
+    numRx = cfgOut.numRx; % æ¥æ”¶å¤©çº¿æ•°ç›®
     
-    ADCNum = cfgOut.ADCNum; % ADC²ÉÑùÊıÄ¿
-    Frame = cfgOut.Frame; % Ö¡Êı
-    ChirpNum = cfgOut.ChirpNum; % Ã¿Ö¡·¢ÉäChirpÊıÄ¿
-    TotalChirpNum = Frame * ChirpNum; % ×ÜChirpÊıÄ¿
+    ADCNum = cfgOut.ADCNum; % ADCé‡‡æ ·æ•°ç›®
+    Frame = cfgOut.Frame; % å¸§æ•°
+    ChirpNum = cfgOut.ChirpNum; % æ¯å¸§å‘å°„Chirpæ•°ç›®
+    TotalChirpNum = Frame * ChirpNum; % æ€»Chirpæ•°ç›®
     
-    % ĞÅºÅ²ÎÊı
-    fc = cfgOut.fc; % ÔØÆµ Hz
-    fs = cfgOut.fs; % ADC²ÉÑùÆµÂÊ Hz 
-    Ramptime = cfgOut.Ramptime; % ¹¤×÷Ê±¼ä
-    Idletime = cfgOut.Idletime; % ¿ÕÏĞÊ±¼ä
-    Slope = cfgOut.Slope; % ChirpĞ±ÂÊ
-    validB = cfgOut.validB; % Êµ¼ÊÓĞĞ§´ø¿í
-    totalB = cfgOut.totalB; % ÍêÕû´ø¿í
-    Tc = cfgOut.Tc; % µ¥ChirpÖÜÆÚ
-    ValidTc = cfgOut.ValidTc; % µ¥ChirpÄÚADCÓĞĞ§²ÉÑùÊ±¼ä
+    % ä¿¡å·å‚æ•°
+    fc = cfgOut.fc; % è½½é¢‘ Hz
+    fs = cfgOut.fs; % ADCé‡‡æ ·é¢‘ç‡ Hz 
+    Ramptime = cfgOut.Ramptime; % å·¥ä½œæ—¶é—´
+    Idletime = cfgOut.Idletime; % ç©ºé—²æ—¶é—´
+    Slope = cfgOut.Slope; % Chirpæ–œç‡
+    validB = cfgOut.validB; % å®é™…æœ‰æ•ˆå¸¦å®½
+    totalB = cfgOut.totalB; % å®Œæ•´å¸¦å®½
+    Tc = cfgOut.Tc; % å•Chirpå‘¨æœŸ
+    ValidTc = cfgOut.ValidTc; % å•Chirpå†…ADCæœ‰æ•ˆé‡‡æ ·æ—¶é—´
     
-    % Ó²¼ş²ÎÊı
-    Pt = cfgOut.Pt; % dbm ·¢Éä¹¦ÂÊ
-    Fn = cfgOut.Fn; % ÔëÉùÏµÊı
-    Ls = cfgOut.Ls;  % ÏµÍ³ËğºÄ
+    % ç¡¬ä»¶å‚æ•°
+    Pt = cfgOut.Pt; % dbm å‘å°„åŠŸç‡
+    Fn = cfgOut.Fn; % å™ªå£°ç³»æ•°
+    Ls = cfgOut.Ls;  % ç³»ç»ŸæŸè€—
     
-    % ÌìÏßÕóÁĞ
-    arr = cfgOut.array; % ĞéÄâÕóÔªÅÅÁĞ
-    antennaPhase = cfgOut.antennaPhase; % ÌìÏßÏàÎ»
-    arrNum = size(arr, 2); % ĞéÄâÕóÁĞÊıÄ¿
+    % å¤©çº¿é˜µåˆ—
+    arr = cfgOut.array; % è™šæ‹Ÿé˜µå…ƒæ’åˆ—
+    antennaPhase = cfgOut.antennaPhase; % å¤©çº¿ç›¸ä½
+    arrNum = size(arr, 2); % è™šæ‹Ÿé˜µåˆ—æ•°ç›®
     arrdelay = zeros(1, arrNum) + Tc * reshape(repmat([0:numTx-1], numRx,1), 1, arrNum) * Tc; 
     % [0 0 0 0 1 1 1 1 2 2 2 2]
     
-    delayTx = Tc * numTx; % ·¢ÉäÌìÏßÎ¬¶È»ıÀÛµÄÊ±ÑÓ
-    arrdx = cfgOut.arrdx; % ¹éÒ»»¯ÕóÔª¼ä¾à
+    delayTx = Tc * numTx; % å‘å°„å¤©çº¿ç»´åº¦ç§¯ç´¯çš„æ—¶å»¶
+    arrdx = cfgOut.arrdx; % å½’ä¸€åŒ–é˜µå…ƒé—´è·
     arrdy = cfgOut.arrdy; 
     
-    c = physconst('LightSpeed'); % ¹âËÙ
-    lambda = c / fc; % ²¨³¤
-    Ts = 1 / fs; % ADC²ÉÑùÊ±¼ä
+    c = physconst('LightSpeed'); % å…‰é€Ÿ
+    lambda = c / fc; % æ³¢é•¿
+    Ts = 1 / fs; % ADCé‡‡æ ·æ—¶é—´
     
-    % ĞÅºÅÄ£ĞÍ
-    signal = zeros(ADCNum, TotalChirpNum, arrNum); % ĞÅºÅ
-    noise = normrnd(0, 1, ADCNum, TotalChirpNum, arrNum); % ÕıÌ¬ÔëÉù
+    % ä¿¡å·æ¨¡å‹
+    signal = zeros(ADCNum, TotalChirpNum, arrNum); % ä¿¡å·
+    noise = normrnd(0, 1, ADCNum, TotalChirpNum, arrNum); % æ­£æ€å™ªå£°
     
     for tarId = 1 : tarNum
-        disp(strcat(['ÕıÔÚ»ñÈ¡Ä¿±ê',num2str(tarId),'µÄÊı¾İ']));
-        % Ä¿±ê²ÎÊı
-        targetR = tarOut.range(tarId);    % ¾àÀë m
-        targetV = tarOut.velocity(tarId); % ËÙ¶È m/s
-        targetAzi = tarOut.Azi(tarId);    % Ä¿±ê·½Î»½Ç ¶È
-        targetEle = tarOut.Ele(tarId);    % Ä¿±ê¸©Ñö½Ç ¶È
-        targetRCS = tarOut.RCS(tarId);    % Ä¿±êRCSÖµ
-        targetGt  = tarOut.Gt(tarId);     % ·¢ÉäÔöÒæ 
-        targetGr  = tarOut.Gr(tarId);     % ½ÓÊÕÔöÒæ 
-        [tarSNR] = CalculateSNR(targetR, targetRCS, targetGt, targetGr, lambda, Pt, Fn, Ls, fs); % ĞÅÔë±È
-        A = sqrt(2 * db2pow(tarSNR)); % ĞÅºÅ·ù¶È
+        disp(strcat(['æ­£åœ¨è·å–ç›®æ ‡',num2str(tarId),'çš„æ•°æ®']));
+        % ç›®æ ‡å‚æ•°
+        targetR = tarOut.range(tarId);    % è·ç¦» m
+        targetV = tarOut.velocity(tarId); % é€Ÿåº¦ m/s
+        targetAzi = tarOut.Azi(tarId);    % ç›®æ ‡æ–¹ä½è§’ åº¦
+        targetEle = tarOut.Ele(tarId);    % ç›®æ ‡ä¿¯ä»°è§’ åº¦
+        targetRCS = tarOut.RCS(tarId);    % ç›®æ ‡RCSå€¼
+        targetGt  = tarOut.Gt(tarId);     % å‘å°„å¢ç›Š 
+        targetGr  = tarOut.Gr(tarId);     % æ¥æ”¶å¢ç›Š 
+        [tarSNR] = CalculateSNR(targetR, targetRCS, targetGt, targetGr, lambda, Pt, Fn, Ls, fs); % ä¿¡å™ªæ¯”
+        A = sqrt(2 * db2pow(tarSNR)); % ä¿¡å·å¹…åº¦
         
-        targPhi0 = rand * 2 * pi; % ²úÉúËæ»úÏàÎ»[0 2*pi]
-        tempSig = zeros(ADCNum, TotalChirpNum, arrNum); % »º´æĞÅºÅ
+        targPhi0 = rand * 2 * pi; % äº§ç”Ÿéšæœºç›¸ä½[0 2*pi]
+        tempSig = zeros(ADCNum, TotalChirpNum, arrNum); % ç¼“å­˜ä¿¡å·
         
         for channelId = 1 : arrNum
             for chirpId = 1 : TotalChirpNum
                 for adcId = 1 : ADCNum
-                    tarDelay = 2 * targetR / c + 2 * targetV * ((chirpId - 1) * delayTx + arrdelay(channelId) + adcId * Ts) / c; % ¶¯Ä¿±êÊ±ÑÓ
+                    tarDelay = 2 * targetR / c + 2 * targetV * ((chirpId - 1) * delayTx + arrdelay(channelId) + adcId * Ts) / c; % åŠ¨ç›®æ ‡æ—¶å»¶
                     tarPhi = targPhi0 + 2 * pi * (arr(1, channelId) * sind(targetAzi) * arrdx + ...
-                             arr(2, channelId) * sind(targetEle) * arrdy) + deg2rad(antennaPhase(channelId)); % ¿¼ÂÇÕóÔª³õÊ¼¡¢Ëæ»úÏàÎ»ºÍÄ¿±ê²¨´ï½Ç
+                             arr(2, channelId) * sind(targetEle) * arrdy) + deg2rad(antennaPhase(channelId)); % è€ƒè™‘é˜µå…ƒåˆå§‹ã€éšæœºç›¸ä½å’Œç›®æ ‡æ³¢è¾¾è§’
                          
-                    % ÖĞÆµĞÅºÅ£ºexp[1j * 2 *pi * fc * tau + 2 * pi * S * t * tau - pi * tau * tau]  tµÄ·¶Î§Îª0-Tc tauµÄ·¶Î§Îªt+nTc
+                    % ä¸­é¢‘ä¿¡å·ï¼šexp[1j * 2 *pi * fc * tau + 2 * pi * S * t * tau - pi * tau * tau]  tçš„èŒƒå›´ä¸º0-Tc tauçš„èŒƒå›´ä¸ºt+nTc
                     tempSig(adcId, chirpId, channelId) = A * cos(2 * pi * (fc * tarDelay + Slope * tarDelay * adcId * Ts - Slope * tarDelay * tarDelay / 2) + tarPhi);
 
                 end
             end
         end
-        signal = signal + tempSig; % ¶àÄ¿±êĞÅºÅÏà¼Ó
+        signal = signal + tempSig; % å¤šç›®æ ‡ä¿¡å·ç›¸åŠ 
     end
-    signal = signal + noise; % ¿¼ÂÇÔëÉù
+    signal = signal + noise; % è€ƒè™‘å™ªå£°
     
 end

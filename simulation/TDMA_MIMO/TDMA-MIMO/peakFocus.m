@@ -1,7 +1,7 @@
 function [rd_peak_list, rd_peak] = peakFocus(RDM, cfar_out_list)
-    rd_peak = zeros(size(RDM)); % ÓÃÓÚ´æ·Å·åÖµÄÜÁ¿
-    rd_peak_list = []; % ÓÃÓÚ´æ·Å·åÖµË÷Òı
-    data_length = size(cfar_out_list, 1); % Êı¾İ³¤¶È
+    rd_peak = zeros(size(RDM)); % ç”¨äºå­˜æ”¾å³°å€¼èƒ½é‡
+    rd_peak_list = []; % ç”¨äºå­˜æ”¾å³°å€¼ç´¢å¼•
+    data_length = size(cfar_out_list, 1); % æ•°æ®é•¿åº¦
     
     for target_idx = 1 :data_length 
        range_idx = cfar_out_list(target_idx,1);

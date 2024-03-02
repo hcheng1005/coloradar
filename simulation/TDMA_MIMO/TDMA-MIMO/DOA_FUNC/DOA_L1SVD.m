@@ -1,46 +1,46 @@
 function PoutSVD = DOA_L1SVD(X, A, P)
-    % ±¾³ÌĞòÎªL1-SVDµÄº¯ÊıÊµÏÖÎÄ¼ş
-    % X £º»ù´øĞÅºÅ
-    % A £º¹ıÍê±¸»ù
-    % P £º ĞÅÔ´ÊıÄ¿
+    % æœ¬ç¨‹åºä¸ºL1-SVDçš„å‡½æ•°å®ç°æ–‡ä»¶
+    % X ï¼šåŸºå¸¦ä¿¡å·
+    % A ï¼šè¿‡å®Œå¤‡åŸº
+    % P ï¼š ä¿¡æºæ•°ç›®
     
-    [M, snap] = size(X); % M ÕóÔª snap ¿ìÅÄ
-    thetaNum = size(A, 2); % É¨ÃèÍø¸ñµãÊı
+    [M, snap] = size(X); % M é˜µå…ƒ snap å¿«æ‹
+    thetaNum = size(A, 2); % æ‰«æç½‘æ ¼ç‚¹æ•°
     DK1 = eye(P);
     DK2 = zeros(P, snap-P);
-    DK = [DK1, DK2].'; % SNAP * PµÄÑ¡Ôñ¾ØÕó
-    [U, Sigm, V] = svd(X); % ÆæÒìÖµ·Ö½â
-    Xsv = X * V * DK; % »ñÈ¡ĞÂµÄ½ÓÊÕ¾ØÕó
+    DK = [DK1, DK2].'; % SNAP * Pçš„é€‰æ‹©çŸ©é˜µ
+    [U, Sigm, V] = svd(X); % å¥‡å¼‚å€¼åˆ†è§£
+    Xsv = X * V * DK; % è·å–æ–°çš„æ¥æ”¶çŸ©é˜µ
     
-    % µÍĞÅÔë±È²âÊÔ·½°¸
+    % ä½ä¿¡å™ªæ¯”æµ‹è¯•æ–¹æ¡ˆ
     cvx_begin quiet
         variables p q
         variables r(thetaNum)
         variable SSV1(thetaNum, P) complex
         expressions Rn(M, P) complex
 
-        minimize(p + 2.7 * q); % ÓÅ»¯Ä¿±ê
+        minimize(p + 2.7 * q); % ä¼˜åŒ–ç›®æ ‡
         subject to
-            Rn = Xsv - A * SSV1; % Çó²Ğ²î
-            Rvec = vec(Rn); % ¾ØÕó×ª»»ÎªÏòÁ¿
-            norm(Rvec) <= p; % µÚÒ»¸ö²»µÈÊ½Ô¼Êø
-            sum(r) <= q; % µÚ¶ş¸ö²»µÈÊ½Ô¼Êø
-            for i = 1 : thetaNum % µÚÈı¸ö²»µÈÊ½Ô¼Êø
+            Rn = Xsv - A * SSV1; % æ±‚æ®‹å·®
+            Rvec = vec(Rn); % çŸ©é˜µè½¬æ¢ä¸ºå‘é‡
+            norm(Rvec) <= p; % ç¬¬ä¸€ä¸ªä¸ç­‰å¼çº¦æŸ
+            sum(r) <= q; % ç¬¬äºŒä¸ªä¸ç­‰å¼çº¦æŸ
+            for i = 1 : thetaNum % ç¬¬ä¸‰ä¸ªä¸ç­‰å¼çº¦æŸ
                 norm(SSV1(i, :)) <= r(i);
             end
     cvx_end
     
-    % ¸ßĞÅÔë±È²âÊÔ·½°¸
-    % confidence_interval = 0.9; % ÖÃĞÅÖµ
-    % noise = X - X0; % ÔëÉù¹À¼Æ
-    % noise_var = var(noise(:)); % ÔëÉù·½²î¹À¼Æ
-    % regulari_param = compute_regulariParam(confidence_interval, noise_var, M, P); % ¸ù¾İ¿¨·½·Ö²¼·´ÑİÃÅÏŞÖµ
+    % é«˜ä¿¡å™ªæ¯”æµ‹è¯•æ–¹æ¡ˆ
+    % confidence_interval = 0.9; % ç½®ä¿¡å€¼
+    % noise = X - X0; % å™ªå£°ä¼°è®¡
+    % noise_var = var(noise(:)); % å™ªå£°æ–¹å·®ä¼°è®¡
+    % regulari_param = compute_regulariParam(confidence_interval, noise_var, M, P); % æ ¹æ®å¡æ–¹åˆ†å¸ƒåæ¼”é—¨é™å€¼
     % cvx_begin quiet
     %     variable SSV1(length(theta_grids), P) complex
     %     minimize(sum(norms(SSV1, 2, 2)))
     %     subject to
     %         norm(Xsv - A * SSV1, 'fro') <= regulari_param 
     % cvx_end
-    PoutSVD = abs(SSV1(:, :)  / max(SSV1(:, :))); % Çó½â¹¦ÂÊÆ×
+    PoutSVD = abs(SSV1(:, :)  / max(SSV1(:, :))); % æ±‚è§£åŠŸç‡è°±
     
 end

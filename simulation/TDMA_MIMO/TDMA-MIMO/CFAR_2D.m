@@ -1,42 +1,42 @@
 function [cfarOut] = CFAR_2D(RDM, Pfa, TestCells, GuardCells)
-    % rd_map£ºÊäÈëÊı¾İ
-    % Pfa£ºĞé¾¯¸ÅÂÊ
-    % TestCells£º²âÊÔµ¥Ôª [4 4]
-    % GuardCells£º±£»¤µ¥Ôª [4 4]
+    % rd_mapï¼šè¾“å…¥æ•°æ®
+    % Pfaï¼šè™šè­¦æ¦‚ç‡
+    % TestCellsï¼šæµ‹è¯•å•å…ƒ [4 4]
+    % GuardCellsï¼šä¿æŠ¤å•å…ƒ [4 4]
     
-    % CFAR¼ì²âÆ÷
+    % CFARæ£€æµ‹å™¨
     detector = phased.CFARDetector2D('TrainingBandSize',TestCells, ...
     'ThresholdFactor','Auto','GuardBandSize',GuardCells, ...
     'ProbabilityFalseAlarm',Pfa,'Method','SOCA','ThresholdOutputPort',true, 'NoisePowerOutputPort',true);
 
-    N_x = size(RDM,1); % ¾àÀëµ¥Ôª
-    N_y = size(RDM,2); % ¶àÆÕÀÕµ¥Ôª
-    % »ñÈ¡¶şÎ¬»¬¶¯´°¿ÚµÄsize
-    Ngc = detector.GuardBandSize(2); % ±£»¤´°ÁĞÏò
-    Ngr = detector.GuardBandSize(1); % ±£»¤´°ĞĞÏò
-    Ntc = detector.TrainingBandSize(2); % ²Î¿¼´°ĞĞÏò
-    Ntr = detector.TrainingBandSize(1); % ²Î¿¼´°ĞĞÏò
+    N_x = size(RDM,1); % è·ç¦»å•å…ƒ
+    N_y = size(RDM,2); % å¤šæ™®å‹’å•å…ƒ
+    % è·å–äºŒç»´æ»‘åŠ¨çª—å£çš„size
+    Ngc = detector.GuardBandSize(2); % ä¿æŠ¤çª—åˆ—å‘
+    Ngr = detector.GuardBandSize(1); % ä¿æŠ¤çª—è¡Œå‘
+    Ntc = detector.TrainingBandSize(2); % å‚è€ƒçª—è¡Œå‘
+    Ntr = detector.TrainingBandSize(1); % å‚è€ƒçª—è¡Œå‘
     cutidx = [];
-    colstart = Ntc + Ngc + 1; % ÁĞ´°Ê×
-    colend = N_y + ( Ntc + Ngc); % ÁĞ´°Î²
-    rowstart = Ntr + Ngr + 1; % ĞĞ´°Ê×
-    rowend = N_x + ( Ntr + Ngr); % ĞĞ´°Î²
+    colstart = Ntc + Ngc + 1; % åˆ—çª—é¦–
+    colend = N_y + ( Ntc + Ngc); % åˆ—çª—å°¾
+    rowstart = Ntr + Ngr + 1; % è¡Œçª—é¦–
+    rowend = N_x + ( Ntr + Ngr); % è¡Œçª—å°¾
     for m = colstart:colend
         for n = rowstart:rowend
-            cutidx = [cutidx,[n;m]]; % ÍêÕû¶şÎ¬´°
+            cutidx = [cutidx,[n;m]]; % å®Œæ•´äºŒç»´çª—
         end
     end
     
-    ncutcells = size(cutidx,2); % »ñÈ¡´°¿Ú±éÀúÇø¼ä
+    ncutcells = size(cutidx,2); % è·å–çª—å£éå†åŒºé—´
     
-    rd_map_padding = repmat(RDM, 3, 3); % ¶ÔRDM²¹Áã
+    rd_map_padding = repmat(RDM, 3, 3); % å¯¹RDMè¡¥é›¶
     chosen_rd_map = rd_map_padding(N_x+1-Ntr-Ngr:2*N_x+Ntr+Ngr,N_y+1-Ntc-Ngc:2*N_y+Ntc+Ngc);
     
-    [dets, ~, noise] = detector(chosen_rd_map,cutidx); % Êä³öCFAR½á¹û
+    [dets, ~, noise] = detector(chosen_rd_map,cutidx); % è¾“å‡ºCFARç»“æœ
     
-    cfar_out = zeros(size(chosen_rd_map)); % ¼ì²âµãÊä³ö
-    noise_out = zeros(size(chosen_rd_map)); % ÔëÉù
-    snr_out = zeros(size(chosen_rd_map)); % ĞÅÔë±È
+    cfar_out = zeros(size(chosen_rd_map)); % æ£€æµ‹ç‚¹è¾“å‡º
+    noise_out = zeros(size(chosen_rd_map)); % å™ªå£°
+    snr_out = zeros(size(chosen_rd_map)); % ä¿¡å™ªæ¯”
     for k = 1:size(dets,1)
         if dets(k) == 1
             cfar_out(cutidx(1,k),cutidx(2,k)) = dets(k); 
