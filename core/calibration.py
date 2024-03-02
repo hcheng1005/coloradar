@@ -244,7 +244,7 @@ class SCRadarCalibration:
             self.waveform.num_adc_samples_per_chirp,
         )
 
-
+# Reference： file/signalPrcesssing_userguide_4chipCascade.pdf
 class CCRadarCalibration(SCRadarCalibration):
     """Cascade Chip Radar Calibration.
 
@@ -272,6 +272,7 @@ class CCRadarCalibration(SCRadarCalibration):
         super(CCRadarCalibration, self).__init__(config)
         self.phase = PhaseCalibration(config["phase"])
 
+    # 4.2 Apply calibration matrix in MIMO operation ——> Second Step: phase and amplitude calibration
     def get_phase_calibration(self) -> np.array:
         """Return the phase calibration array."""
         # Phase calibrationm atrix
@@ -285,6 +286,7 @@ class CCRadarCalibration(SCRadarCalibration):
             1
         )
 
+    # 4.2 Apply calibration matrix in MIMO operation ——> First step: frequency calibration
     def get_frequency_calibration(self) -> np.array:
         """Return the frequency calibration array."""
         num_tx: int = self.phase.num_tx

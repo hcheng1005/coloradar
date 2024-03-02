@@ -21,6 +21,9 @@ FFT阶段一般分为两个部分，分别是RangeFFT和DopplerFFT。
 - [Introduction_Radar_signal_processing](../file/Introduction_Radar_signal_processing.pdf)
   
 - [4D Millimeter-Wave Radar in Autonomous Driving: A Survey](../file/2306.04242.pdf)
+  
 - [Imaging Radar Using Cascaded mmWave Sensor Reference Design](https://www.ti.com/lit/ug/tiduen5a/tiduen5a.pdf)
 
+- [[Youtube:MATLAB]: FMCW Radar for Autonomous Vehicles | Understanding Radar Principles](https://www.youtube.com/watch?v=-N7A5CIi0sg)
+  
 ## 其他参考  
