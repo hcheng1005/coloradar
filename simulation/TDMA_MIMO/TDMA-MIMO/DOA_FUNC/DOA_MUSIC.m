@@ -7,6 +7,7 @@ function [PoutMusic] = DOA_MUSIC(X, P, thetaGrids)
     snap = size(X, 2); % 快拍数
     RX = X * X' / snap; % 协方差矩阵
     
+    % 对协方差矩阵R进行特征值分解，并将特征值从到到小排列，其中第r+1到第N个特征值对应的特征向量就是噪声子空间的基
     [V, D] = eig(RX); % 特征值分解
     eig_value = real(diag(D)); % 提取特征值
     [B, I] = sort(eig_value, 'descend'); % 排序特征值

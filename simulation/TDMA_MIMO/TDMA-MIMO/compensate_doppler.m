@@ -96,5 +96,7 @@ function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, 
         correct_martrix = exp(-1j * deltaPhi * tmpTX ); % TARNUM * TXNUM 
         correct_martrixs(:, 1, :) = correct_martrix;
         com_dopplerFFTOut = sig_bin_org .* correct_martrixs; % TARNUM * RXNUM * TXNUM
+
+        % com_dopplerFFTOut = doaInput;
     end
 end
