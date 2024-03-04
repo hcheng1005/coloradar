@@ -3,11 +3,11 @@
 clc;clear;close all;
 
 dataPath = './dataset/adc_raw_dat.mat'; % 保存文件路径
-ShowIQ = 1; % 是否显示IQ信号
-ShowRange = 1; % 是否显示RangePorfile
-ShowRD = 1; % 是否显示RD
+ShowIQ = 0; % 是否显示IQ信号
+ShowRange = 0; % 是否显示RangePorfile
+ShowRD = 0; % 是否显示RD
 ShowCFAR = 1; % 是否显示CFAR结果
-ShowPeak = 1; % 是否显示聚合峰值结果
+ShowPeak = 0; % 是否显示聚合峰值结果
 IQFlag = 1; % 是否选择IQ路信号 0-单路 1-双路
 saveFlag = 0; % 是否保存文件
 
@@ -248,17 +248,17 @@ for frame_id = 1 : Frame % Frame
         PointSet = [pcd_x.', pcd_y.', pcd_z.', targetPerFrame.velocitySet.', targetPerFrame.snrSet.'];
         toc
 
-        %% 点云聚类
-        eps = 1.1; % 邻域半径
-        minPointsInCluster = 3; % 簇内最小点数阈值
-        xFactor = 1;   % 变大控制距离变大，变小分类距离变小 椭圆
-        yFactor = 1;   % 变大控制角度变大，变小分类距离变小 椭圆 
-        figure(6);
-        set(gcf,'unit','centimeters','position',[30,0,10,10])
-        disp(strcat(['=====','点云聚类','====='])); 
-        tic
-        [sumClu] = dbscanClustering(eps,PointSet,xFactor,yFactor,minPointsInCluster,frame_id); % DBSCAN聚类
-        toc
+        % %% 点云聚类
+        % eps = 1.1; % 邻域半径
+        % minPointsInCluster = 3; % 簇内最小点数阈值
+        % xFactor = 1;   % 变大控制距离变大，变小分类距离变小 椭圆
+        % yFactor = 1;   % 变大控制角度变大，变小分类距离变小 椭圆 
+        % figure(6);
+        % set(gcf,'unit','centimeters','position',[30,0,10,10])
+        % disp(strcat(['=====','点云聚类','====='])); 
+        % tic
+        % [sumClu] = dbscanClustering(eps,PointSet,xFactor,yFactor,minPointsInCluster,frame_id); % DBSCAN聚类
+        % toc
     end
 
 end

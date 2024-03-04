@@ -90,13 +90,57 @@ function [com_dopplerFFTOut] = compensate_doppler(doaInput, cfgOut, dopplerIdx, 
         com_dopplerFFTOut = correct_sig;        
     else
         sig_bin_org = doaInput; % TARNUM * RXNUM * TXNUM
-        deltaPhi = 2 * pi * (dopplerIdx - ChirpNum / 2) / (numTx * ChirpNum); % 多普勒相位修正 tarNum * 1
+        % ves = (dopplerIdx - ChirpNum / 2) * 3e8 / cfgOut.fc / ( 2 * cfgOut.Tc * (numTx * ChirpNum));
+        ves = doppler_(doaInput, dopplerIdx, cfgOut)
+        deltaPhi = ves * 4 *pi * cfgOut.Tc * cfgOut.fc / 3e8;
+
         deltaPhi = deltaPhi.';
         tmpTX = (0 : numTx - 1); % 1 * TXNUM
         correct_martrix = exp(-1j * deltaPhi * tmpTX ); % TARNUM * TXNUM 
         correct_martrixs(:, 1, :) = correct_martrix;
         com_dopplerFFTOut = sig_bin_org .* correct_martrixs; % TARNUM * RXNUM * TXNUM
+    end
+end
 
-        % com_dopplerFFTOut = doaInput;
+%% 解算正确的多普勒速度
+%% 参考文章： https://www.ti.com.cn/cn/lit/an/zhca901/zhca901.pdf
+function ves = doppler_(doaInput, dopplerIdx, cfgOut)
+    VMAX = (cfgOut.ChirpNum / 2 - 1) * 3e8 / cfgOut.fc / ( 2 * cfgOut.Tc * (cfgOut.numTx * cfgOut.ChirpNum))
+    ves = zeros(1,length(dopplerIdx));
+    sig_bin_org = doaInput;
+    sig_bin_org = reshape(sig_bin_org, length(dopplerIdx),[]);
+    sig_bin_org = sig_bin_org(1:length(dopplerIdx), [1,2,3,4,5,6,7,8]);
+    for k=1:length(dopplerIdx)
+        % 根据峰值索引计算多普勒速度
+        vest = (dopplerIdx(k) - cfgOut.ChirpNum / 2) * 3e8 / cfgOut.fc / ( 2 * cfgOut.Tc * (cfgOut.numTx * cfgOut.ChirpNum));
+        % 提取8RX相位信息
+        angle_inf = sig_bin_org(k,:);  
+        % 得到相位偏移           
+        delta_Pfiest = vest * 4 *pi * cfgOut.Tc * cfgOut.fc / 3e8;
+        j = sqrt(-1);
+        angle_inf1 = angle_inf;
+        % 相位补偿
+        angle_inf1(5:8) = angle_inf1(5:8)*exp(-j*delta_Pfiest/2);  
+        % 计算第一次角度峰值位置
+        angle_result1 = abs(fftshift(fft(angle_inf1,128)));
+        [max1,~] = max(angle_result1);
+        
+        % 反转符号后再次计算角度峰值位置
+        angle_inf2 = angle_inf1; 
+        angle_inf2(5:8) = angle_inf2(5:8)*-1; %对补偿后的TX2的Rx1-4进行符号反转
+        angle_result2 = abs(fftshift(fft(angle_inf2,128)));
+        [max2,~] = max(angle_result2);
+
+        % 确定最终多普勒速度
+        if max1>max2
+            vreal = vest;
+        else
+            if vest>0
+                vreal = vest-2*VMAX;
+            else
+                vreal = vest+2*VMAX;
+            end
+        end
+        ves(k) = vreal;
     end
 end
